@@ -1,2 +1,4 @@
 
 *.pyc
+*.docx
+autotrader_scraper/cars.csv
