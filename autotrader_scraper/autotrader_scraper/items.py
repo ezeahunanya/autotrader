@@ -4,8 +4,9 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 import scrapy
-from scrapy.loader import ItemLoader
 from itemloaders.processors import TakeFirst, MapCompose
+import numpy as np
+import re
 
 def strip_currency(value):
     if value is np.nan:
@@ -88,7 +89,7 @@ def get_manufactured_year_identifier(value):
     if value is np.nan:
         value = value
     else:
-        value = re.search('\(\d{2}', value)[0].replace('(', '')
+        value = re.search('\(\w+', value)[0].replace('(', '')
     return value
 
 class AutotraderCarsItem(scrapy.Item):
