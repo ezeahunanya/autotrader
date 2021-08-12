@@ -51,8 +51,8 @@ class AutotraderSpider(CrawlSpider):
                 correlation_id = re.search('\w+-\w+-\w+-\w+-\w+', string)[0]
                 break
         
-        car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}?advertising-location=at_cars&guid={correlation_id}&include-delivery-option=on&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&postcode=n14an&radius=1501&sort=relevance'''.format(advert_id=
-                                      advert_id, correlation_id=correlation_id)
+        car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}?advertising-location=at_cars&guid={correlation_id}&include-delivery-option=on&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&postcode=n14an&radius=1501&sort=relevance'''\
+                                    .format(advert_id=advert_id, correlation_id=correlation_id)
         
         yield scrapy.Request(car_details_api_endpoint, 
                              callback=self.parse_car_api)
