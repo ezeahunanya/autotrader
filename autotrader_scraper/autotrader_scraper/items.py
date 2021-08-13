@@ -128,3 +128,21 @@ class AutotraderCarsItem(scrapy.Item):
                                  output_processor = TakeFirst())
     
     tax = scrapy.Field(output_processor = TakeFirst())
+
+    zero_to_sixty = scrapy.Field()
+    zero_to_sixty_two = scrapy.Field()
+    top_speed = scrapy.Field()
+    cylinders = scrapy.Field()
+    valves = scrapy.Field()
+    engine_power = scrapy.Field()
+    engine_torque = scrapy.Field()
+    #height1650 mm
+    #length4475 mm
+    #wheelbase2670 mm
+    #width2065 mm
+    #fuel_tank capacity62 litres
+    #gross_vehicle_weight1895 kg
+    #Boot space (seats down)1503 litres
+    #Boot space (seats up)513 litres
+    #Max loading weight431 kg
+    #Minimum kerb weight

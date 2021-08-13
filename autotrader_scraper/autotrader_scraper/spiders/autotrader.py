@@ -240,4 +240,38 @@ class AutotraderSpider(CrawlSpider):
         
         il.add_value('tax', get_dictionary_value(car_data, ['vehicle', 'tax']))
         
-        return il.load_item()
+        item = il.load_item()
+        
+        car_full_spec_api_endpoint = 'https://www.autotrader.co.uk/json/taxonomy/technical-specification?derivative={derivative_id}&channel=cars'\
+                                     .format(derivative_id=item['derivative_id'])
+       
+        yield scrapy.Request(car_full_spec_api_endpoint, 
+                             callback=self.parse_car_spec_api, 
+                             meta={'item': item})
+
+
+    def parse_car_spec_api(self, response):
+
+        car_specs_raw_data = response.text
+        car_specs_data = json.loads(car_specs_raw_data)
+
+        il2 = ItemLoader(item=response.meta['item'])
+        
+        dic ={}
+
+        for item in car_specs_data['techSpecs']:
+            if item['specName'] == 'Performance':
+                for i in item['specs']:
+                    name = str(i['name']).replace('0 - 60 mph', 'zero_to_sixty').replace('0 - 62 mph', 'zero_to_sixty_two').lower().replace(' ', '_')
+                    value = i['value']
+                    dic[name] = value
+
+            elif item['specName'] == 'Dimensions':
+                for i in item['specs']:
+                    name = str(i['name']).lower().replace(' ', '_').replace('(', '').replace(')', '')
+                    value = i['value']
+                    dic[name] = value
+
+        il2.add_value('zero_to_sixty', get_dictionary_value(dic, ['zero_to_sixty']))
+
+        return il2.load_item()
