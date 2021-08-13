@@ -42,6 +42,7 @@ class AutotraderSpider(CrawlSpider):
         Yields a request for the api endpoint of an individual car 
         advertisement.
         '''
+        
         parsed_url = urlparse(response.url)
         advert_id = parsed_url.path.split('/')[-1]
 
