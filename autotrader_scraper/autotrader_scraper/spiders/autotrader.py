@@ -60,7 +60,7 @@ class AutotraderSpider(CrawlSpider):
 
     def parse_car_api(self, response):
         '''
-        Returns a scrapy item with populated fields.
+        Returns a scrapy request for extra car specifications.
         '''
 
         car_raw_data = response.text
@@ -244,34 +244,81 @@ class AutotraderSpider(CrawlSpider):
         
         car_full_spec_api_endpoint = 'https://www.autotrader.co.uk/json/taxonomy/technical-specification?derivative={derivative_id}&channel=cars'\
                                      .format(derivative_id=item['derivative_id'])
-       
+
         yield scrapy.Request(car_full_spec_api_endpoint, 
-                             callback=self.parse_car_spec_api, 
-                             meta={'item': item})
+                                 callback=self.parse_car_spec_api, 
+                                 meta={'item': item})
 
 
     def parse_car_spec_api(self, response):
-
+        '''
+        Returns a car item for each advertisment with all the features
+        '''
+        
         car_specs_raw_data = response.text
         car_specs_data = json.loads(car_specs_raw_data)
 
         il2 = ItemLoader(item=response.meta['item'])
         
-        dic ={}
+        dic = {}
+        
+        if car_specs_data != {}:
+            for item in car_specs_data['techSpecs']:
+                if item['specName'] == 'Performance':
+                    for i in item['specs']:
+                        name = str(i['name']).replace('0 - 60 mph', 'zero_to_sixty').replace('0 - 62 mph', 'zero_to_sixty_two').lower().replace(' ', '_')
+                        value = i['value']
+                        dic[name] = value
 
-        for item in car_specs_data['techSpecs']:
-            if item['specName'] == 'Performance':
-                for i in item['specs']:
-                    name = str(i['name']).replace('0 - 60 mph', 'zero_to_sixty').replace('0 - 62 mph', 'zero_to_sixty_two').lower().replace(' ', '_')
-                    value = i['value']
-                    dic[name] = value
+                elif item['specName'] == 'Dimensions':
+                    for i in item['specs']:
+                        name = str(i['name']).lower().replace(' ', '_').replace('(', '').replace(')', '')
+                        value = i['value']
+                        dic[name] = value
 
-            elif item['specName'] == 'Dimensions':
-                for i in item['specs']:
-                    name = str(i['name']).lower().replace(' ', '_').replace('(', '').replace(')', '')
-                    value = i['value']
-                    dic[name] = value
-
-        il2.add_value('zero_to_sixty', get_dictionary_value(dic, ['zero_to_sixty']))
+        
+        il2.add_value('zero_to_sixty', 
+                      get_dictionary_value(dic, ['zero_to_sixty']))
+        
+        il2.add_value('zero_to_sixty_two', 
+                      get_dictionary_value(dic, ['zero_to_sixty_two']))
+        
+        il2.add_value('top_speed', get_dictionary_value(dic, ['top_speed']))
+        
+        il2.add_value('cylinders', get_dictionary_value(dic, ['cylinders']))
+        
+        il2.add_value('valves', get_dictionary_value(dic, ['valves']))
+        
+        il2.add_value('engine_power', 
+                      get_dictionary_value(dic, ['engine_power']))
+        
+        il2.add_value('engine_torque', 
+                      get_dictionary_value(dic, ['engine_torque']))
+        
+        il2.add_value('height', get_dictionary_value(dic, ['height']))
+        
+        il2.add_value('length', get_dictionary_value(dic, ['length']))
+        
+        il2.add_value('wheelbase', get_dictionary_value(dic, ['wheelbase']))
+        
+        il2.add_value('width', get_dictionary_value(dic, ['width']))
+        
+        il2.add_value('fuel_tank_capacity', 
+                      get_dictionary_value(dic, ['fuel_tank_capacity']))
+        
+        il2.add_value('gross_vehicle_weight', 
+                      get_dictionary_value(dic, ['gross_vehicle_weight']))
+        
+        il2.add_value('boot_space_seats_up', 
+                      get_dictionary_value(dic, ['boot_space_seats_up']))
+        
+        il2.add_value('boot_space_seats_down', 
+                      get_dictionary_value(dic, ['boot_space_seats_down']))
+        
+        il2.add_value('max_loading_weight', 
+                      get_dictionary_value(dic, ['max_loading_weight']))
+        
+        il2.add_value('minimum_kerb_weight', 
+                      get_dictionary_value(dic, ['minimum_kerb_weight']))
 
         return il2.load_item()

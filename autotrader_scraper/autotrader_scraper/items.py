@@ -32,24 +32,24 @@ class AutotraderCarsItem(scrapy.Item):
     
     body_type = scrapy.Field(output_processor = TakeFirst())
     
-    mileage = scrapy.Field(input_processor = MapCompose(clean_mileage, 
-                                                        clean_big_number), 
+    mileage = scrapy.Field(input_processor = MapCompose(clean_big_number, 
+                                                        get_number), 
                            output_processor = TakeFirst())
     
-    engine_size = scrapy.Field(input_processor = MapCompose(clean_engine_size), 
+    engine_size = scrapy.Field(input_processor = MapCompose(get_number), 
                                output_processor = TakeFirst())
     
     transmission = scrapy.Field(output_processor = TakeFirst())
     
     fuel_type = scrapy.Field(output_processor = TakeFirst())
     
-    doors = scrapy.Field(input_processor = MapCompose(strip_doors), 
+    doors = scrapy.Field(input_processor = MapCompose(get_number), 
                          output_processor = TakeFirst())
     
-    seats = scrapy.Field(input_processor = MapCompose(strip_seats), 
+    seats = scrapy.Field(input_processor = MapCompose(get_number), 
                          output_processor = TakeFirst())
     
-    number_of_owners = scrapy.Field(input_processor = MapCompose(get_owners), 
+    number_of_owners = scrapy.Field(input_processor = MapCompose(get_number), 
                                     output_processor = TakeFirst())
     
     emission_scheme = scrapy.Field(output_processor = TakeFirst())
@@ -124,25 +124,56 @@ class AutotraderCarsItem(scrapy.Item):
     
     number_of_photos = scrapy.Field(output_processor = TakeFirst())
     
-    co2_emissions = scrapy.Field(input_processor = MapCompose(clean_co2), 
+    co2_emissions = scrapy.Field(input_processor = MapCompose(get_number), 
                                  output_processor = TakeFirst())
     
     tax = scrapy.Field(output_processor = TakeFirst())
 
-    zero_to_sixty = scrapy.Field()
-    zero_to_sixty_two = scrapy.Field()
-    top_speed = scrapy.Field()
-    cylinders = scrapy.Field()
-    valves = scrapy.Field()
-    engine_power = scrapy.Field()
-    engine_torque = scrapy.Field()
-    #height1650 mm
-    #length4475 mm
-    #wheelbase2670 mm
-    #width2065 mm
-    #fuel_tank capacity62 litres
-    #gross_vehicle_weight1895 kg
-    #Boot space (seats down)1503 litres
-    #Boot space (seats up)513 litres
-    #Max loading weight431 kg
-    #Minimum kerb weight
+    zero_to_sixty = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+
+    zero_to_sixty_two = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+
+    top_speed = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    cylinders = scrapy.Field(output_processor = TakeFirst())
+    
+    valves = scrapy.Field(output_processor = TakeFirst())
+    
+    engine_power = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    engine_torque = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    height = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    length = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    wheelbase = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    width = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    fuel_tank_capacity = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    gross_vehicle_weight = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    boot_space_seats_up = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    boot_space_seats_down = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    max_loading_weight = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    minimum_kerb_weight = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())

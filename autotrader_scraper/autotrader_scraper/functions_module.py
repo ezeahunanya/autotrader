@@ -81,126 +81,6 @@ def clean_big_number(value):
     return value
 
 
-def clean_mileage(value):
-    '''
-    Strips 'miles' str from mileage.
-
-    Parameters
-    ----------
-    value: str
-        
-    Returns
-    -------
-    str or nan
-        str if string provided 
-        numpy nan if nan provided
-    '''
-
-    if value is np.nan:
-        value = value
-
-    else:
-        value = value.replace(' miles', '')
-
-    return value
-
-
-def clean_engine_size(value):
-    '''
-    Strips 'L' str from engine size.
-
-    Parameters
-    ----------
-    value: str
-        
-    Returns
-    -------
-    str or nan
-        str if string provided 
-        numpy nan if nan provided
-    '''
-
-    if value is np.nan:
-        value = value
-
-    else:
-        value = value.replace('L', '')
-
-    return value
-
-
-def strip_doors(value):
-    '''
-    Strips 'door' str from number of doors.
-
-    Parameters
-    ----------
-    value: str
-        
-    Returns
-    -------
-    str or nan
-        str if string provided 
-        numpy nan if nan provided
-    '''
-
-    if value is np.nan:
-        value = value
-
-    else:
-        value = value.replace(' doors', '')
-
-    return value
-
-
-def strip_seats(value):
-    '''
-    Strips 'seats' str from number of seats.
-
-    Parameters
-    ----------
-    value: str
-        
-    Returns
-    -------
-    str or nan
-        str if string provided 
-        numpy nan if nan provided
-    '''
-
-    if value is np.nan:
-        value = value
-
-    else:
-        value = value.replace(' seats', '')
-        
-    return value
-
-
-def get_owners(value):
-    '''
-    Extracts number of owners in string.
-
-    Parameters
-    ----------
-    value: str
-        
-    Returns
-    -------
-    str or nan
-        str if string provided 
-        numpy nan if nan provided
-    '''
-
-    if value is np.nan:
-        value = value
-
-    else:
-        value = re.search('\d+', value)[0]
-
-    return value
-
-
 def get_latitude(value):
     '''
     Extracts latitude from latitude/longitude string.
@@ -249,30 +129,6 @@ def get_longitude(value):
     return value
 
 
-def clean_co2(value):
-    '''
-    Strips 'g/km' str from CO2 emmisions.
-
-    Parameters
-    ----------
-    value: str
-        
-    Returns
-    -------
-    str or nan
-        str if string provided 
-        numpy nan if nan provided
-    '''
-
-    if value is np.nan:
-        value = value
-
-    else:
-        value = value.replace('g/km', '')
-
-    return value
-
-
 def get_manufactured_year(value):
     '''
     Extracts year from string.
@@ -317,5 +173,28 @@ def get_manufactured_year_identifier(value):
 
     else:
         value = re.search('\(\w+', value)[0].replace('(', '')
+
+    return value
+
+def get_number(value):
+    '''
+    Extracts number from string.
+
+    Parameters
+    ----------
+    value: str
+        
+    Returns
+    -------
+    str or nan
+        str if string provided 
+        numpy nan if nan provided
+    '''
+
+    if value is np.nan:
+        value = value
+
+    else:
+        value = re.search('\d+\.?\d*', value)[0]
 
     return value
