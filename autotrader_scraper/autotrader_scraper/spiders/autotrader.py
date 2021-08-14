@@ -235,7 +235,7 @@ class AutotraderSpider(CrawlSpider):
                      get_dictionary_value(car_data, ['pageData', 
                                           'tracking', 'number_of_photos']))
         
-        il.add_value('co2_emissions', 
+        il.add_value('co2_emission', 
                      get_dictionary_value(car_data, ['vehicle', 'co2Emissions']))
         
         il.add_value('tax', get_dictionary_value(car_data, ['vehicle', 'tax']))
@@ -273,6 +273,12 @@ class AutotraderSpider(CrawlSpider):
                 elif item['specName'] == 'Dimensions':
                     for i in item['specs']:
                         name = str(i['name']).lower().replace(' ', '_').replace('(', '').replace(')', '')
+                        value = i['value']
+                        dic[name] = value
+
+                elif item['specName'] == 'Running costs':
+                    for i in item['specs']:
+                        name = str(i['name']).lower().replace(' ', '_').replace('₂', '2')
                         value = i['value']
                         dic[name] = value
 
@@ -320,5 +326,21 @@ class AutotraderSpider(CrawlSpider):
         
         il2.add_value('minimum_kerb_weight', 
                       get_dictionary_value(dic, ['minimum_kerb_weight']))
+
+        il2.add_value('urban', get_dictionary_value(dic, ['urban']))
+
+        il2.add_value('extra_urban', 
+                      get_dictionary_value(dic, ['extra_urban']))
+
+        il2.add_value('combined', get_dictionary_value(dic, ['combined']))
+
+        il2.add_value('co2_emissions', 
+                      get_dictionary_value(dic, ['co2_emissions']))
+        
+        il2.add_value('annual_tax', 
+                      get_dictionary_value(dic, ['annual_tax']))
+
+        il2.add_value('insurance_group', 
+                      get_dictionary_value(dic, ['insurance_group']))
 
         return il2.load_item()

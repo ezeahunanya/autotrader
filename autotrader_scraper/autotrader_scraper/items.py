@@ -124,7 +124,7 @@ class AutotraderCarsItem(scrapy.Item):
     
     number_of_photos = scrapy.Field(output_processor = TakeFirst())
     
-    co2_emissions = scrapy.Field(input_processor = MapCompose(get_number), 
+    co2_emission = scrapy.Field(input_processor = MapCompose(get_number), 
                                  output_processor = TakeFirst())
     
     tax = scrapy.Field(output_processor = TakeFirst())
@@ -177,3 +177,20 @@ class AutotraderCarsItem(scrapy.Item):
     
     minimum_kerb_weight = scrapy.Field(input_processor = MapCompose(get_number), 
                                  output_processor = TakeFirst())
+
+    urban = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    extra_urban = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    combined = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    co2_emissions = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    annual_tax = scrapy.Field(input_processor = MapCompose(get_number), 
+                                 output_processor = TakeFirst())
+    
+    insurance_group = scrapy.Field(output_processor = TakeFirst())
