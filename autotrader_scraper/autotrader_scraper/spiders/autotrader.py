@@ -342,5 +342,7 @@ class AutotraderSpider(CrawlSpider):
 
         il2.add_value('insurance_group', 
                       get_dictionary_value(dic, ['insurance_group']))
-
-        return il2.load_item()
+        
+        item = il2.load_item()
+        
+        return item

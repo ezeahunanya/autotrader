@@ -15,10 +15,10 @@ def get_dictionary_value(dictionary, keys):
 
     Returns
     -------
-    dictionary: int or str or bool or dict or nan
+    dictionary: int or str or bool or dict or none
         int or str or bool if bottom-level of dictionary 
         dict if not bottom-level of dictionary
-        numpy nan value if KeyError is raised
+        none value if KeyError is raised
     '''
 
     for key in keys:
@@ -27,7 +27,7 @@ def get_dictionary_value(dictionary, keys):
             dictionary = dictionary[key]
 
         except KeyError:
-            dictionary = np.nan
+            dictionary = None
             break   
 
     return dictionary
@@ -43,12 +43,12 @@ def strip_currency(value):
         
     Returns
     -------
-    str or nan
+    str or none
         str if string provided 
-        numpy nan if nan provided
+        none if none provided
     '''
 
-    if value is np.nan:
+    if value is None:
         value = value
 
     else:
@@ -67,12 +67,12 @@ def clean_big_number(value):
         
     Returns
     -------
-    str or nan
+    str or none
         str if string provided 
-        numpy nan if nan provided
+        none if none provided
     '''
 
-    if value is np.nan:
+    if value is None:
         value = value
 
     else:
@@ -91,12 +91,12 @@ def get_latitude(value):
         
     Returns
     -------
-    str or nan
+    str or none
         str if string provided 
-        numpy nan if nan provided
+        none if none provided
     '''
 
-    if value is np.nan:
+    if value is None:
         value = value
 
     else:
@@ -115,12 +115,12 @@ def get_longitude(value):
         
     Returns
     -------
-    str or nan
+    str or none
         str if string provided 
-        numpy nan if nan provided
+        none if none provided
     '''
 
-    if value is np.nan:
+    if value is None:
         value = value
 
     else:
@@ -139,12 +139,12 @@ def get_manufactured_year(value):
         
     Returns
     -------
-    str or nan
+    str or none
         str if string provided 
-        numpy nan if nan provided
+        none if none provided
     '''
 
-    if value is np.nan:
+    if value is None:
         value = value
 
     else:
@@ -163,12 +163,12 @@ def get_manufactured_year_identifier(value):
         
     Returns
     -------
-    str or nan
+    str or none
         str if string provided 
-        numpy nan if nan provided
+        none if none provided
     '''
 
-    if value is np.nan:
+    if value is None:
         value = value
 
     else:
@@ -186,12 +186,12 @@ def get_number(value):
         
     Returns
     -------
-    str or nan
+    str or none
         str if string provided 
-        numpy nan if nan provided
+        none if none provided
     '''
 
-    if value is np.nan:
+    if value is None:
         value = value
 
     else:
