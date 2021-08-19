@@ -198,3 +198,27 @@ def get_number(value):
         value = re.search('\d+\.?\d*', value)[0]
 
     return value
+
+
+def clean_phone_number(value):
+    '''
+    Returns clean phone number.
+
+    Parameters
+    ----------
+    value: str
+        
+    Returns
+    -------
+    str or none
+        str if string provided 
+        none if none provided
+    '''
+
+    if value is None:
+        value = value
+
+    else:
+        value = value.replace('(', '').replace(')', '').replace(' ', '')
+
+    return value

@@ -112,12 +112,25 @@ class AutotraderCarsItem(scrapy.Item):
     
     total_reviews = scrapy.Field(output_processor = TakeFirst())
     
+    region = scrapy.Field(output_processor = TakeFirst())
+    
+    county = scrapy.Field(output_processor = TakeFirst())
+    
+    town = scrapy.Field(output_processor = TakeFirst())
+    
+    country = scrapy.Field(output_processor = TakeFirst())
+
     seller_postcode = scrapy.Field(output_processor = TakeFirst())
     
     seller_address_one = scrapy.Field(output_processor = TakeFirst())
     
     seller_address_two = scrapy.Field(output_processor = TakeFirst())
     
+    dealer_website = scrapy.Field(output_processor = TakeFirst())
+
+    primary_contact_number = scrapy.Field(input_processor = MapCompose(clean_phone_number), 
+                                 output_processor = TakeFirst())
+
     page_url = scrapy.Field(output_processor = TakeFirst())
     
     number_of_photos = scrapy.Field(output_processor = TakeFirst())

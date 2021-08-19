@@ -27,6 +27,16 @@ class AutotraderScraperPipeline:
     TABLES['sellers'] = (
     "CREATE TABLE `sellers` ("
     "  `advert_id` BIGINT,"
+    seller_name
+    seller_id
+    is_dealer_trusted
+    seller_longlat
+    seller_segment
+    seller_rating
+    total_reviews
+    seller_postcode
+    seller_address_one
+    seller_address_two
     "  `emission_scheme` text,"
     "  PRIMARY KEY (`advert_id`)"
     ") ENGINE=InnoDB")

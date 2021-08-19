@@ -213,7 +213,23 @@ class AutotraderSpider(CrawlSpider):
         il.add_value('total_reviews', 
                      get_dictionary_value(car_data, ['seller', 
                                           'ratingTotalReviews']))
-        
+
+        il.add_value('region', 
+                     get_dictionary_value(car_data, ['seller', 
+                                          'location', 'region']))
+
+        il.add_value('county', 
+                     get_dictionary_value(car_data, ['seller', 
+                                          'location', 'county']))
+
+        il.add_value('town', 
+                     get_dictionary_value(car_data, ['seller', 
+                                          'location', 'town']))
+
+        il.add_value('country', 
+                     get_dictionary_value(car_data, ['seller', 
+                                          'location', 'country']))
+
         il.add_value('seller_postcode', 
                      get_dictionary_value(car_data, ['seller', 
                                           'location', 'postcode']))
@@ -225,6 +241,14 @@ class AutotraderSpider(CrawlSpider):
         il.add_value('seller_address_two', 
                      get_dictionary_value(car_data, ['seller', 
                                           'location', 'addressTwo']))
+
+        il.add_value('dealer_website', 
+                     get_dictionary_value(car_data, ['seller', 
+                                          'dealer_website']))
+
+        il.add_value('primary_contact_number', 
+                     get_dictionary_value(car_data, ['seller', 
+                                          'primary_contact_number']))
         
         il.add_value('page_url', 
                      get_dictionary_value(car_data, ['pageData', 'canonical']))
