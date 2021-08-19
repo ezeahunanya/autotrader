@@ -6,10 +6,8 @@ import re
 import json
 from autotrader_scraper.items import AutotraderCarsItem
 from scrapy.loader import ItemLoader
-import numpy as np
 from datetime import datetime as dt 
-from autotrader_scraper.functions_module import get_dictionary_value
-
+from autotrader_scraper.functions_module import get_dictionary_value 
 
 class AutotraderSpider(CrawlSpider):
     '''
@@ -337,12 +335,9 @@ class AutotraderSpider(CrawlSpider):
         il2.add_value('co2_emissions', 
                       get_dictionary_value(dic, ['co2_emissions']))
         
-        il2.add_value('annual_tax', 
-                      get_dictionary_value(dic, ['annual_tax']))
-
         il2.add_value('insurance_group', 
                       get_dictionary_value(dic, ['insurance_group']))
         
         item = il2.load_item()
-        
+
         return item

@@ -1,25 +1,31 @@
 from __future__ import print_function
 import mysql.connector
 from mysql.connector import errorcode
+from autotrader_scraper.functions_module import get_dictionary_value as gdv
+from autotrader_scraper.config import *
 
-
-from mysql.connector import cursor
 
 class AutotraderScraperPipeline:
-    table = 'autotrader_cars'
-    config  = {
-        'host': '127.0.0.1',
-        'user': 'root',
-        'password': 'Password1.',
-        'raise_on_warnings': True,
-        'use_pure':  True
-    }
 
-    DB_NAME = 'autotrader'
+    '''
+    This class defines how an item from the spider is processed.
+    '''
+
+    config['raise_on_warnings'] = True
+    config['use_pure'] = True
+        
+    DB_NAME = 'autotrader_adverts'
     TABLES = {}
 
-    TABLES['autotrader_cars'] = (
-    "CREATE TABLE `autotrader_cars` ("
+    TABLES['vehicle_features'] = (
+    "CREATE TABLE `vehicle_features` ("
+    "  `advert_id` BIGINT,"
+    "  `emission_scheme` text,"
+    "  PRIMARY KEY (`advert_id`)"
+    ") ENGINE=InnoDB")
+
+    TABLES['sellers'] = (
+    "CREATE TABLE `sellers` ("
     "  `advert_id` BIGINT,"
     "  `emission_scheme` text,"
     "  PRIMARY KEY (`advert_id`)"
@@ -28,48 +34,28 @@ class AutotraderScraperPipeline:
     def __init__(self, **kwargs):
         self.cnx = self.mysql_connect()
         self.cursor = self.cnx.cursor()
+        self.connect_to_database()
+        self.create_tables()
 
     def open_spider(self, spider):
         print("spider open")
-        try:
-            self.cursor.execute("USE {}".format(self.DB_NAME))
-            print("Database {} connected".format(self.DB_NAME))
-        except mysql.connector.Error as err:
-            print("Database {} does not exists.".format(self.DB_NAME))
-            if err.errno == errorcode.ER_BAD_DB_ERROR:
-                self.create_database(self.cursor)
-                print("Database {} created successfully.".format(self.DB_NAME))
-                self.cursor.database = self.DB_NAME
-                self.cursor.execute("USE {}".format(self.DB_NAME))
-            else:
-                print(err)
-                exit(1)
-    
-        for table_name in self.TABLES:
-            table_description = self.TABLES[table_name]
-            try:
-                print("Creating table {}: ".format(table_name), end='')
-                self.cursor.execute(table_description)
-            except mysql.connector.Error as err:
-                if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
-                    print("already exists.")
-                else:
-                    print(err.msg)
-            else:
-                print("OK")
-
+        
     def process_item(self, item, spider):
         print("Saving item into db ...")
-        self.save(item)
+        self.save_to_db(item)
         return item
     
     def close_spider(self, spider):
         self.mysql_close()
     
     def mysql_connect(self):
+        '''
+        
+        '''
+
         try:
             print('Connecting to server...')
-            return mysql.connector.connect(**self.config)
+            return mysql.connector.connect(**config)
             
 
         except mysql.connector.Error as err:
@@ -80,7 +66,27 @@ class AutotraderScraperPipeline:
             else:
                 print(err)
 
-    def create_database(self, cursor):
+    def connect_to_database(self):
+        '''
+        
+        '''
+
+        try:
+            self.cursor.execute("USE {}".format(self.DB_NAME))
+            print("Database {} connected".format(self.DB_NAME))
+        except mysql.connector.Error as err:
+            print("Database {} does not exists.".format(self.DB_NAME))
+            if err.errno == errorcode.ER_BAD_DB_ERROR:
+                self.create_database(self.cursor)
+                print("Database {} created successfully.".format(self.DB_NAME))
+                self.cursor.execute("USE {}".format(self.DB_NAME))
+                print("Database {} selected.".format(self.DB_NAME))
+
+            else:
+                print(err)
+                exit(1)
+                
+    def create_database(self):
         try:
             self.cursor.execute(
                 "CREATE DATABASE {} DEFAULT CHARACTER SET 'UTF8MB4'".format(self.DB_NAME))
@@ -88,12 +94,30 @@ class AutotraderScraperPipeline:
             print("Failed creating database: {}".format(err))
             exit(1)
 
-   
-    def save(self, item): 
+    def create_tables(self):
+        '''
+            
+        '''
 
-        create_query = ("INSERT INTO autotrader_cars (advert_id) VALUES (%s)")
+        for table in self.TABLES:
+            table_description = self.TABLES[table]
+            try:
+                print("Creating table {}: ".format(table), end='')
+                self.cursor.execute(table_description)
+            except mysql.connector.Error as err:
+                if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+                    print("already exists.")
+                else:
+                    print(err.msg)
+            else:
+                print("OK")
+
+   
+    def save_to_db(self, item): 
+
+        create_query = ("INSERT INTO autotrader_cars (advert_id, emission_scheme) VALUES (%s, %s)")
         
-        val = (item['advert_id'],)
+        val = (item['advert_id'], gdv(item, ['emission_scheme']))
         
         
         # Insert new row

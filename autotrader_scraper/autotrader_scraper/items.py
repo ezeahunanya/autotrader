@@ -1,7 +1,5 @@
 import scrapy
 from itemloaders.processors import TakeFirst, MapCompose
-import numpy as np
-import re
 from autotrader_scraper.functions_module import *
 
 
@@ -188,9 +186,6 @@ class AutotraderCarsItem(scrapy.Item):
                                  output_processor = TakeFirst())
     
     co2_emissions = scrapy.Field(input_processor = MapCompose(get_number), 
-                                 output_processor = TakeFirst())
-    
-    annual_tax = scrapy.Field(input_processor = MapCompose(get_number), 
                                  output_processor = TakeFirst())
     
     insurance_group = scrapy.Field(output_processor = TakeFirst())
