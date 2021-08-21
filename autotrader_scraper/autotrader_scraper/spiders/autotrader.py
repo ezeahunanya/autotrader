@@ -47,8 +47,9 @@ class AutotraderSpider(CrawlSpider):
         for item in response.css('script::text').getall():
             if re.search('window.AT.correlationId', item) != None:
                 string = item
-                correlation_id = re.search('\w+-\w+-\w+-\w+-\w+', string)[0]
                 break
+            
+        correlation_id = re.search('\w+-\w+-\w+-\w+-\w+', string)[0]
         
         car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}?advertising-location=at_cars&guid={correlation_id}&include-delivery-option=on&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&postcode=n14an&radius=1501&sort=relevance'''\
                                     .format(advert_id=advert_id, correlation_id=correlation_id)
@@ -244,11 +245,11 @@ class AutotraderSpider(CrawlSpider):
 
         il.add_value('dealer_website', 
                      get_dictionary_value(car_data, ['seller', 
-                                          'dealer_website']))
+                                          'dealerWebsite']))
 
         il.add_value('primary_contact_number', 
                      get_dictionary_value(car_data, ['seller', 
-                                          'primary_contact_number']))
+                                          'primaryContactNumber']))
         
         il.add_value('page_url', 
                      get_dictionary_value(car_data, ['pageData', 'canonical']))
@@ -265,7 +266,7 @@ class AutotraderSpider(CrawlSpider):
         item = il.load_item()
         
         car_full_spec_api_endpoint = 'https://www.autotrader.co.uk/json/taxonomy/technical-specification?derivative={derivative_id}&channel=cars'\
-                                     .format(derivative_id=item['derivative_id'])
+                                     .format(derivative_id=get_dictionary_value(item, ['derivative_id']) )
 
         yield scrapy.Request(car_full_spec_api_endpoint, 
                                  callback=self.parse_car_spec_api, 
