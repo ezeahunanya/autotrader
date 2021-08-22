@@ -33,6 +33,8 @@ class AutotraderSpider(CrawlSpider):
             Rule(LinkExtractor(allow = ('/car-details/'), 
             restrict_css = ('li.search-page__result')), 
             callback = 'parse_car', follow=True),
+
+            Rule(LinkExtractor(restrict_css = ('a.paginationMini--right__active')), follow=True),
             )
 
     def parse_car(self, response):
