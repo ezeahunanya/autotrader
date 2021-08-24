@@ -14,9 +14,11 @@ car infomation from the autotrader website and store it inside a database.
 
 To run this project install [python](https://www.python.org/downloads/). 
 Clone the GitHub repository by running the following in the command line:
+
 '''
 git clone https://github.com/ezeahunanya/autotrader.git
 '''
+
 Create a new environment and pip install the packages in the >>>>requirements.txt file.
 
 To run the scraper, change the working directory to 'autotrader_scraper' 
