@@ -1,6 +1,6 @@
 # Autotrader
 
-Autotrader analyses car feature data from thee autotrader website. This project
+Autotrader analyses car features from the autotrader website. This project
 is split into to three sections:
 
 - Gathering data into a database
