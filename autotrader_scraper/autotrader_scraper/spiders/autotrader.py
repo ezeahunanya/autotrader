@@ -7,7 +7,7 @@ import json
 from autotrader_scraper.items import AutotraderCarsItem
 from scrapy.loader import ItemLoader
 from datetime import datetime as dt 
-from autotrader_scraper.functions_module import get_dictionary_value 
+from autotrader_scraper.functions_module import get_dictionary_value as gdv
 
 class AutotraderSpider(CrawlSpider):
     '''
@@ -68,207 +68,153 @@ class AutotraderSpider(CrawlSpider):
         car_data = json.loads(car_raw_data)
 
         il = ItemLoader(item=AutotraderCarsItem())
-        il.add_value('advert_id', get_dictionary_value(car_data, ['pageData', 
+        il.add_value('advert_id', gdv(car_data, ['pageData', 
                                                        'ods', 'advertId']))
                                                        
         il.add_value('time_scraped', dt.now().time())
         
         il.add_value('date_scraped', dt.now().date())
         
-        il.add_value('make', get_dictionary_value(car_data, ['vehicle', 'make']))
+        il.add_value('make', gdv(car_data, ['vehicle', 'make']))
         
-        il.add_value('model', 
-                    get_dictionary_value(car_data, ['vehicle', 'model']))
+        il.add_value('model', gdv(car_data, ['vehicle', 'model']))
         
-        il.add_value('trim', get_dictionary_value(car_data, ['vehicle', 'trim']))
+        il.add_value('trim', gdv(car_data, ['vehicle', 'trim']))
         
         il.add_value('manufactured_year', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
+                     gdv(car_data, ['vehicle', 'keyFacts', 
                                          'manufactured-year']))
         
         il.add_value('manufactured_year_identifier', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
+                     gdv(car_data, ['vehicle', 'keyFacts', 
                                           'manufactured-year']))
         
-        il.add_value('body_type', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
-                                          'body-type']))
+        il.add_value('body_type', gdv(car_data, ['vehicle', 'keyFacts', 
+                                                 'body-type']))
         
-        il.add_value('mileage', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
-                                          'mileage']))
+        il.add_value('mileage', gdv(car_data, ['vehicle', 'keyFacts', 
+                                               'mileage']))
         
-        il.add_value('engine_size', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
-                     'engine-size']))
+        il.add_value('engine_size', gdv(car_data, ['vehicle', 'keyFacts', 
+                                                   'engine-size']))
         
-        il.add_value('transmission', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
+        il.add_value('transmission', gdv(car_data, ['vehicle', 'keyFacts', 
                                           'transmission']))
         
-        il.add_value('fuel_type', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
+        il.add_value('fuel_type', gdv(car_data, ['vehicle', 'keyFacts', 
                                           'fuel-type']))
         
-        il.add_value('doors', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
-                                          'doors']))
+        il.add_value('doors', gdv(car_data, ['vehicle', 'keyFacts', 'doors']))
         
-        il.add_value('seats', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
-                                          'seats']))
+        il.add_value('seats', gdv(car_data, ['vehicle', 'keyFacts', 'seats']))
         
-        il.add_value('number_of_owners', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
-                                          'owners']))
+        il.add_value('number_of_owners', gdv(car_data, ['vehicle', 'keyFacts', 
+                                                        'owners']))
         
-        il.add_value('emission_scheme', 
-                     get_dictionary_value(car_data, ['vehicle', 'keyFacts', 
-                                          'emission-scheme']))
+        il.add_value('emission_scheme', gdv(car_data, ['vehicle', 'keyFacts', 
+                                                       'emission-scheme']))
         
         il.add_value('vehicle_location_postcode', 
-                     get_dictionary_value(car_data, ['vehicle', 
-                                          'vehicleLocation', 'postcode']))
+                     gdv(car_data, ['vehicle', 'vehicleLocation', 'postcode']))
         
         il.add_value('vehicle_location_latitude', 
-                     get_dictionary_value(car_data, ['vehicle', 
-                                          'vehicleLocation', 'latLong']))
+                     gdv(car_data, ['vehicle', 'vehicleLocation', 'latLong']))
         
         il.add_value('vehicle_location_longitude', 
-                     get_dictionary_value(car_data, ['vehicle', 
-                                          'vehicleLocation', 'latLong']))
+                     gdv(car_data, ['vehicle', 'vehicleLocation', 'latLong']))
         
-        il.add_value('vehicle_registration_mark', 
-                     get_dictionary_value(car_data, ['vehicle', 'vrm']))
+        il.add_value('vehicle_registration_mark', gdv(car_data, ['vehicle', 'vrm']))
         
-        il.add_value('derivative_id', 
-                     get_dictionary_value(car_data, ['vehicle', 'derivativeId']))
+        il.add_value('derivative_id', gdv(car_data, ['vehicle', 'derivativeId']))
         
-        il.add_value('condition', 
-                     get_dictionary_value(car_data, ['vehicle', 'condition']))
+        il.add_value('condition', gdv(car_data, ['vehicle', 'condition']))
         
-        il.add_value('imported', 
-                     get_dictionary_value(car_data, ['vehicle', 'imported']))
+        il.add_value('imported', gdv(car_data, ['vehicle', 'imported']))
         
         il.add_value('average_mileage', 
-                     get_dictionary_value(car_data, ['vehicle', 
-                                          'mileageDeviation', 
-                                          'predictedMileage']))
+                     gdv(car_data, ['vehicle', 'mileageDeviation', 
+                                    'predictedMileage']))
         
         il.add_value('mileage_deviation', 
-                     get_dictionary_value(car_data, ['vehicle', 
-                                          'mileageDeviation', 'deviation']))
+                     gdv(car_data, ['vehicle', 'mileageDeviation', 'deviation']))
         
         il.add_value('mileage_deviation_type', 
-                     get_dictionary_value(car_data, ['vehicle', 
-                                          'mileageDeviation', 'type']))
+                     gdv(car_data, ['vehicle', 'mileageDeviation', 'type']))
         
-        il.add_value('ad_description', 
-                     get_dictionary_value(car_data, ['advert', 'description']))
+        il.add_value('ad_description', gdv(car_data, ['advert', 'description']))
         
-        il.add_value('price', 
-                     get_dictionary_value(car_data, ['advert', 'price']))
+        il.add_value('price', gdv(car_data, ['advert', 'price']))
         
         il.add_value('price_excluding_fees', 
-                     get_dictionary_value(car_data, ['advert', 
-                                          'priceExcludingFees']))
+                     gdv(car_data, ['advert', 'priceExcludingFees']))
         
-        il.add_value('no_admin_fees', 
-                     get_dictionary_value(car_data, ['advert', 'noAdminFees']))
+        il.add_value('no_admin_fees', gdv(car_data, ['advert', 'noAdminFees']))
         
         il.add_value('price_deviation', 
-                     get_dictionary_value(car_data, ['advert', 
-                                          'marketAveragePriceDeviation', 
-                                          'deviation']))
+                     gdv(car_data, ['advert', 'marketAveragePriceDeviation', 
+                                    'deviation']))
         
         il.add_value('price_deviation_type', 
-                     get_dictionary_value(car_data, ['advert', 
-                                          'marketAveragePriceDeviation', 
-                                          'type']))
+                     gdv(car_data, ['advert', 'marketAveragePriceDeviation', 
+                                    'type']))
         
         il.add_value('price_rating', 
-                     get_dictionary_value(car_data, ['advert', 
-                                          'priceIndicator', 'rating']))
+                     gdv(car_data, ['advert', 'priceIndicator', 'rating']))
         
         il.add_value('price_rating_label', 
-                     get_dictionary_value(car_data, ['advert', 
-                                          'priceIndicator', 'ratingLabel']))
+                     gdv(car_data, ['advert', 'priceIndicator', 'ratingLabel']))
         
-        il.add_value('seller_name', 
-                     get_dictionary_value(car_data, ['seller', 'name']))
+        il.add_value('seller_name', gdv(car_data, ['seller', 'name']))
         
-        il.add_value('seller_id', 
-                     get_dictionary_value(car_data, ['seller', 'id']))
+        il.add_value('seller_id', gdv(car_data, ['seller', 'id']))
         
         il.add_value('is_dealer_trusted', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'isTrustedDealer']))
+                     gdv(car_data, ['seller', 'isTrustedDealer']))
         
-        il.add_value('seller_longlat', 
-                     get_dictionary_value(car_data, ['seller', 'longitude']))
+        il.add_value('seller_longlat', gdv(car_data, ['seller', 'longitude']))
         
-        il.add_value('seller_segment', 
-                     get_dictionary_value(car_data, ['seller', 'segment']))
+        il.add_value('seller_segment', gdv(car_data, ['seller', 'segment']))
         
-        il.add_value('seller_rating', 
-                     get_dictionary_value(car_data, ['seller', 'ratingStars']))
+        il.add_value('seller_rating', gdv(car_data, ['seller', 'ratingStars']))
         
         il.add_value('total_reviews', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'ratingTotalReviews']))
+                     gdv(car_data, ['seller', 'ratingTotalReviews']))
 
-        il.add_value('region', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'location', 'region']))
+        il.add_value('region', gdv(car_data, ['seller', 'location', 'region']))
 
-        il.add_value('county', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'location', 'county']))
+        il.add_value('county', gdv(car_data, ['seller', 'location', 'county']))
 
-        il.add_value('town', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'location', 'town']))
+        il.add_value('town', gdv(car_data, ['seller', 'location', 'town']))
 
-        il.add_value('country', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'location', 'country']))
+        il.add_value('country', gdv(car_data, ['seller', 'location', 'country']))
 
         il.add_value('seller_postcode', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'location', 'postcode']))
+                     gdv(car_data, ['seller', 'location', 'postcode']))
         
         il.add_value('seller_address_one', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'location', 'addressOne']))
+                     gdv(car_data, ['seller', 'location', 'addressOne']))
         
         il.add_value('seller_address_two', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'location', 'addressTwo']))
+                     gdv(car_data, ['seller', 'location', 'addressTwo']))
 
-        il.add_value('dealer_website', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'dealerWebsite']))
+        il.add_value('dealer_website', gdv(car_data, ['seller', 'dealerWebsite']))
 
         il.add_value('primary_contact_number', 
-                     get_dictionary_value(car_data, ['seller', 
-                                          'primaryContactNumber']))
+                     gdv(car_data, ['seller', 'primaryContactNumber']))
         
-        il.add_value('page_url', 
-                     get_dictionary_value(car_data, ['pageData', 'canonical']))
+        il.add_value('page_url', gdv(car_data, ['pageData', 'canonical']))
         
         il.add_value('number_of_photos', 
-                     get_dictionary_value(car_data, ['pageData', 
-                                          'tracking', 'number_of_photos']))
+                     gdv(car_data, ['pageData', 'tracking', 'number_of_photos']))
         
-        il.add_value('co2_emission', 
-                     get_dictionary_value(car_data, ['vehicle', 'co2Emissions']))
+        il.add_value('co2_emission', gdv(car_data, ['vehicle', 'co2Emissions']))
         
-        il.add_value('tax', get_dictionary_value(car_data, ['vehicle', 'tax']))
+        il.add_value('tax', gdv(car_data, ['vehicle', 'tax']))
         
         item = il.load_item()
         
         car_full_spec_api_endpoint = 'https://www.autotrader.co.uk/json/taxonomy/technical-specification?derivative={derivative_id}&channel=cars'\
-                                     .format(derivative_id=get_dictionary_value(item, ['derivative_id']) )
+                                     .format(derivative_id=gdv(item, ['derivative_id']) )
 
         yield scrapy.Request(car_full_spec_api_endpoint, 
                                  callback=self.parse_car_spec_api, 
@@ -308,62 +254,49 @@ class AutotraderSpider(CrawlSpider):
                         dic[name] = value
 
         
-        il2.add_value('zero_to_sixty', 
-                      get_dictionary_value(dic, ['zero_to_sixty']))
+        il2.add_value('zero_to_sixty', gdv(dic, ['zero_to_sixty']))
         
-        il2.add_value('zero_to_sixty_two', 
-                      get_dictionary_value(dic, ['zero_to_sixty_two']))
+        il2.add_value('zero_to_sixty_two', gdv(dic, ['zero_to_sixty_two']))
         
-        il2.add_value('top_speed', get_dictionary_value(dic, ['top_speed']))
+        il2.add_value('top_speed', gdv(dic, ['top_speed']))
         
-        il2.add_value('cylinders', get_dictionary_value(dic, ['cylinders']))
+        il2.add_value('cylinders', gdv(dic, ['cylinders']))
         
-        il2.add_value('valves', get_dictionary_value(dic, ['valves']))
+        il2.add_value('valves', gdv(dic, ['valves']))
         
-        il2.add_value('engine_power', 
-                      get_dictionary_value(dic, ['engine_power']))
+        il2.add_value('engine_power', gdv(dic, ['engine_power']))
         
-        il2.add_value('engine_torque', 
-                      get_dictionary_value(dic, ['engine_torque']))
+        il2.add_value('engine_torque', gdv(dic, ['engine_torque']))
         
-        il2.add_value('height', get_dictionary_value(dic, ['height']))
+        il2.add_value('height', gdv(dic, ['height']))
         
-        il2.add_value('length', get_dictionary_value(dic, ['length']))
+        il2.add_value('length', gdv(dic, ['length']))
         
-        il2.add_value('wheelbase', get_dictionary_value(dic, ['wheelbase']))
+        il2.add_value('wheelbase', gdv(dic, ['wheelbase']))
         
-        il2.add_value('width', get_dictionary_value(dic, ['width']))
+        il2.add_value('width', gdv(dic, ['width']))
         
-        il2.add_value('fuel_tank_capacity', 
-                      get_dictionary_value(dic, ['fuel_tank_capacity']))
+        il2.add_value('fuel_tank_capacity', gdv(dic, ['fuel_tank_capacity']))
         
-        il2.add_value('gross_vehicle_weight', 
-                      get_dictionary_value(dic, ['gross_vehicle_weight']))
+        il2.add_value('gross_vehicle_weight', gdv(dic, ['gross_vehicle_weight']))
         
-        il2.add_value('boot_space_seats_up', 
-                      get_dictionary_value(dic, ['boot_space_seats_up']))
+        il2.add_value('boot_space_seats_up', gdv(dic, ['boot_space_seats_up']))
         
-        il2.add_value('boot_space_seats_down', 
-                      get_dictionary_value(dic, ['boot_space_seats_down']))
+        il2.add_value('boot_space_seats_down', gdv(dic, ['boot_space_seats_down']))
         
-        il2.add_value('max_loading_weight', 
-                      get_dictionary_value(dic, ['max_loading_weight']))
+        il2.add_value('max_loading_weight', gdv(dic, ['max_loading_weight']))
         
-        il2.add_value('minimum_kerb_weight', 
-                      get_dictionary_value(dic, ['minimum_kerb_weight']))
+        il2.add_value('minimum_kerb_weight', gdv(dic, ['minimum_kerb_weight']))
 
-        il2.add_value('urban', get_dictionary_value(dic, ['urban']))
+        il2.add_value('urban', gdv(dic, ['urban']))
 
-        il2.add_value('extra_urban', 
-                      get_dictionary_value(dic, ['extra_urban']))
+        il2.add_value('extra_urban', gdv(dic, ['extra_urban']))
 
-        il2.add_value('combined', get_dictionary_value(dic, ['combined']))
+        il2.add_value('combined', gdv(dic, ['combined']))
 
-        il2.add_value('co2_emissions', 
-                      get_dictionary_value(dic, ['co2_emissions']))
+        il2.add_value('co2_emissions', gdv(dic, ['co2_emissions']))
         
-        il2.add_value('insurance_group', 
-                      get_dictionary_value(dic, ['insurance_group']))
+        il2.add_value('insurance_group', gdv(dic, ['insurance_group']))
         
         item = il2.load_item()
 

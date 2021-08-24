@@ -2,7 +2,7 @@ from __future__ import print_function
 import mysql.connector
 from mysql.connector import errorcode
 from autotrader_scraper.config import *
-from autotrader_scraper.functions_module import get_dictionary_value 
+from autotrader_scraper.functions_module import get_dictionary_value as gdv
 
 class AutotraderScraperPipeline:
     '''
@@ -223,10 +223,10 @@ class AutotraderScraperPipeline:
 
 
         seller_values = (
-        get_dictionary_value(item, ['seller_id']), get_dictionary_value(item, ['seller_name']), get_dictionary_value(item, ['is_dealer_trusted']), get_dictionary_value(item, ['seller_longlat']), 
-        get_dictionary_value(item, ['seller_segment']), get_dictionary_value(item, ['seller_rating']), get_dictionary_value(item, ['total_reviews']), get_dictionary_value(item, ['region']), get_dictionary_value(item, ['county']), get_dictionary_value(item, ['town']), 
-        get_dictionary_value(item, ['country']), get_dictionary_value(item, ['seller_postcode']), get_dictionary_value(item, ['seller_address_one']), get_dictionary_value(item, ['seller_address_two']), 
-        get_dictionary_value(item, ['dealer_website']), get_dictionary_value(item, ['primary_contact_number'])
+        gdv(item, ['seller_id']), gdv(item, ['seller_name']), gdv(item, ['is_dealer_trusted']), gdv(item, ['seller_longlat']), 
+        gdv(item, ['seller_segment']), gdv(item, ['seller_rating']), gdv(item, ['total_reviews']), gdv(item, ['region']), gdv(item, ['county']), gdv(item, ['town']), 
+        gdv(item, ['country']), gdv(item, ['seller_postcode']), gdv(item, ['seller_address_one']), gdv(item, ['seller_address_two']), 
+        gdv(item, ['dealer_website']), gdv(item, ['primary_contact_number'])
         )
                         
         try:
@@ -260,21 +260,21 @@ class AutotraderScraperPipeline:
          )
 
         vehicle_feature_values = (
-        get_dictionary_value(item, ['advert_id']), get_dictionary_value(item, ['date_scraped']), get_dictionary_value(item, ['time_scraped']), get_dictionary_value(item, ['make']), get_dictionary_value(item, ['model']), get_dictionary_value(item, ['trim']),
-        get_dictionary_value(item, ['manufactured_year']), get_dictionary_value(item, ['manufactured_year_identifier']), get_dictionary_value(item, ['body_type']), get_dictionary_value(item, ['mileage']),
-        get_dictionary_value(item, ['engine_size']), get_dictionary_value(item, ['transmission']), get_dictionary_value(item, ['fuel_type']), get_dictionary_value(item, ['doors']), get_dictionary_value(item, ['seats']), get_dictionary_value(item, ['number_of_owners']), 
-        get_dictionary_value(item, ['emission_scheme']), get_dictionary_value(item, ['vehicle_location_postcode']), get_dictionary_value(item, ['vehicle_location_latitude']), 
-        get_dictionary_value(item, ['vehicle_location_longitude']), get_dictionary_value(item, ['vehicle_registration_mark']), get_dictionary_value(item, ['derivative_id']), 
-        get_dictionary_value(item, ['condition']), get_dictionary_value(item, ['imported']), get_dictionary_value(item, ['average_mileage']), get_dictionary_value(item, ['mileage_deviation']), 
-        get_dictionary_value(item, ['mileage_deviation_type']), get_dictionary_value(item, ['ad_description']), get_dictionary_value(item, ['price']), get_dictionary_value(item, ['price_excluding_fees']), 
-        get_dictionary_value(item, ['no_admin_fees']), get_dictionary_value(item, ['price_deviation']), get_dictionary_value(item, ['price_deviation_type']), get_dictionary_value(item, ['price_rating']), 
-        get_dictionary_value(item, ['price_rating_label']), get_dictionary_value(item, ['seller_id']), get_dictionary_value(item, ['page_url']), get_dictionary_value(item, ['number_of_photos']), 
-        get_dictionary_value(item, ['co2_emission']), get_dictionary_value(item, ['tax']), get_dictionary_value(item, ['zero_to_sixty']), get_dictionary_value(item, ['zero_to_sixty_two']), get_dictionary_value(item, ['top_speed']), 
-        get_dictionary_value(item, ['cylinders']), get_dictionary_value(item, ['valves']), get_dictionary_value(item, ['engine_power']), get_dictionary_value(item, ['engine_torque']), get_dictionary_value(item, ['height']), get_dictionary_value(item, ['length']), 
-        get_dictionary_value(item, ['wheelbase']), get_dictionary_value(item, ['width']), get_dictionary_value(item, ['fuel_tank_capacity']), get_dictionary_value(item, ['gross_vehicle_weight']), 
-        get_dictionary_value(item, ['boot_space_seats_up']), get_dictionary_value(item, ['boot_space_seats_down']), get_dictionary_value(item, ['max_loading_weight']), 
-        get_dictionary_value(item, ['minimum_kerb_weight']), get_dictionary_value(item, ['urban']), get_dictionary_value(item, ['extra_urban']), get_dictionary_value(item, ['combined']), get_dictionary_value(item, ['co2_emissions']), 
-        get_dictionary_value(item, ['insurance_group'])
+        gdv(item, ['advert_id']), gdv(item, ['date_scraped']), gdv(item, ['time_scraped']), gdv(item, ['make']), gdv(item, ['model']), gdv(item, ['trim']),
+        gdv(item, ['manufactured_year']), gdv(item, ['manufactured_year_identifier']), gdv(item, ['body_type']), gdv(item, ['mileage']),
+        gdv(item, ['engine_size']), gdv(item, ['transmission']), gdv(item, ['fuel_type']), gdv(item, ['doors']), gdv(item, ['seats']), gdv(item, ['number_of_owners']), 
+        gdv(item, ['emission_scheme']), gdv(item, ['vehicle_location_postcode']), gdv(item, ['vehicle_location_latitude']), 
+        gdv(item, ['vehicle_location_longitude']), gdv(item, ['vehicle_registration_mark']), gdv(item, ['derivative_id']), 
+        gdv(item, ['condition']), gdv(item, ['imported']), gdv(item, ['average_mileage']), gdv(item, ['mileage_deviation']), 
+        gdv(item, ['mileage_deviation_type']), gdv(item, ['ad_description']), gdv(item, ['price']), gdv(item, ['price_excluding_fees']), 
+        gdv(item, ['no_admin_fees']), gdv(item, ['price_deviation']), gdv(item, ['price_deviation_type']), gdv(item, ['price_rating']), 
+        gdv(item, ['price_rating_label']), gdv(item, ['seller_id']), gdv(item, ['page_url']), gdv(item, ['number_of_photos']), 
+        gdv(item, ['co2_emission']), gdv(item, ['tax']), gdv(item, ['zero_to_sixty']), gdv(item, ['zero_to_sixty_two']), gdv(item, ['top_speed']), 
+        gdv(item, ['cylinders']), gdv(item, ['valves']), gdv(item, ['engine_power']), gdv(item, ['engine_torque']), gdv(item, ['height']), gdv(item, ['length']), 
+        gdv(item, ['wheelbase']), gdv(item, ['width']), gdv(item, ['fuel_tank_capacity']), gdv(item, ['gross_vehicle_weight']), 
+        gdv(item, ['boot_space_seats_up']), gdv(item, ['boot_space_seats_down']), gdv(item, ['max_loading_weight']), 
+        gdv(item, ['minimum_kerb_weight']), gdv(item, ['urban']), gdv(item, ['extra_urban']), gdv(item, ['combined']), gdv(item, ['co2_emissions']), 
+        gdv(item, ['insurance_group'])
          )
 
 
