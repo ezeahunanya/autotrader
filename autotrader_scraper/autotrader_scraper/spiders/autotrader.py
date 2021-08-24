@@ -24,7 +24,13 @@ class AutotraderSpider(CrawlSpider):
     rules: list
         rule objects to define how spider crawls the web
     '''
-
+    
+    # start on autotrader.co.uk and get makes
+    #request each of them 
+    # if page count is lower than 100 proceed
+    #if not get models and repeat
+    # if page number higher than 100 get price range 
+    
     name = 'autotrader'
     allowed_domains = ['autotrader.co.uk']
     start_urls = ['''https://www.autotrader.co.uk/car-search?postcode=n14an&make=&include-delivery-option=on&advertising-location=at_cars&page=1''']
