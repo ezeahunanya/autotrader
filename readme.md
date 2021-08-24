@@ -19,8 +19,8 @@ git clone https://github.com/ezeahunanya/autotrader.git
 '''
 Create a new environment and pip install the packages in the >>>>requirements.txt file.
 
-To run the scraper, change into the autotrader_scraper directory. Then run the 
-following command from the command line:
+To run the scraper, change the working directory to 'autotrader_scraper' 
+from the command line. Then run the following command:
 
 '''
 scrapy crawl autotrader
