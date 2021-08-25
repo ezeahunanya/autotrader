@@ -35,6 +35,31 @@ class AutotraderSpider(CrawlSpider):
     allowed_domains = ['autotrader.co.uk']
     start_urls = ['''https://www.autotrader.co.uk/car-search?postcode=n14an&make=&include-delivery-option=on&advertising-location=at_cars&page=1''']
 
+    #def parse(self, repsonse):
+    #makes = response.css('optgroup')[1]
+    #response.css('optgroup')[1]
+    #response.css('optgroup')[1].css('option')
+    # response.css('optgroup')[1].css('option')[7].attrib['value']
+    # 'https://www.autotrader.co.uk/car-search?postcode=n14an&make={VAUXHALL}&include-delivery-option=on&advertising-location=at_cars&page=1'
+    #pagecount response.css('li.paginationMini__count')
+    #total page count response.css('li.paginationMini__count').css('strong::text')[1].get()
+
+    #iincluse why this function exist
+    #if page_count > 100:
+    #    find models...
+
+    # model items response.css('div.sf-flyout__options.js-flyout-options')
+    # each model response.css('div.sf-flyout__options.js-flyout-options').css('button').attrib['data-selected-value']
+    # index after .css('button') so loop and reqeust
+    # 'https://www.autotrader.co.uk/car-search?sort=relevance&postcode=n14an&radius=1500&make={VAUXHALL}&model={ADAM}&include-delivery-option=on'
+    # same logic as before with pages counts above 100
+    # if above>
+    #
+
+
+
+
+
     rules = (
             Rule(LinkExtractor(allow = ('/car-details/'), 
             restrict_css = ('li.search-page__result')), 
