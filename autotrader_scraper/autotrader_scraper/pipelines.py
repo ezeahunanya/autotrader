@@ -1,7 +1,7 @@
 from __future__ import print_function
 import mysql.connector
 from mysql.connector import errorcode
-from autotrader_scraper.config import *
+from autotrader_scraper.config import mysql_details
 from autotrader_scraper.functions_module import get_dictionary_value as gdv
 
 class AutotraderScraperPipeline:
@@ -9,8 +9,8 @@ class AutotraderScraperPipeline:
     This class defines how an item from the spider is processed.
     '''
 
-    config['raise_on_warnings'] = True
-    config['use_pure'] = True
+    mysql_details['raise_on_warnings'] = True
+    mysql_details['use_pure'] = True
         
     DB_NAME = 'autotrader_adverts'
     TABLES = {}
