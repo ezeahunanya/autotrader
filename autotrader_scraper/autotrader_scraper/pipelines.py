@@ -136,7 +136,7 @@ class AutotraderScraperPipeline:
 
         try:
             print('Connecting to server...')
-            return mysql.connector.connect(**config)
+            return mysql.connector.connect(**mysql_details)
             
 
         except mysql.connector.Error as err:
