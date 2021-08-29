@@ -1,15 +1,17 @@
 import scrapy
-from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from urllib.parse import urlparse
 import re
 import json
 from autotrader_scraper.items import AutotraderCarsItem
 from scrapy.loader import ItemLoader
 from datetime import datetime as dt 
 from autotrader_scraper.functions_module import get_dictionary_value as gdv
+from scraper_api import ScraperAPIClient
+from autotrader_scraper.config import API_KEY
 
-class AutotraderSpider(CrawlSpider):
+client = ScraperAPIClient(API_KEY)
+
+class AutotraderSpider(scrapy.Spider):
     '''
     Represent a spider object which will crawl autotrader webpages.
 
@@ -24,72 +26,178 @@ class AutotraderSpider(CrawlSpider):
     rules: list
         rule objects to define how spider crawls the web
     '''
-    
-    # start on autotrader.co.uk and get makes
-    #request each of them 
-    # if page count is lower than 100 proceed
-    #if not get models and repeat
-    # if page number higher than 100 get price range 
-    
+   
     name = 'autotrader'
-    allowed_domains = ['autotrader.co.uk']
-    start_urls = ['''https://www.autotrader.co.uk/car-search?postcode=n14an&make=&include-delivery-option=on&advertising-location=at_cars&page=1''']
-
-    #def parse(self, repsonse):
-    #makes = response.css('optgroup')[1]
-    #response.css('optgroup')[1]
-    #response.css('optgroup')[1].css('option')
-    # response.css('optgroup')[1].css('option')[7].attrib['value']
-    # 'https://www.autotrader.co.uk/car-search?postcode=n14an&make={VAUXHALL}&include-delivery-option=on&advertising-location=at_cars&page=1'
-    #pagecount response.css('li.paginationMini__count')
-    #total page count response.css('li.paginationMini__count').css('strong::text')[1].get()
-
-    #iincluse why this function exist
-    #if page_count > 100:
-    #    find models...
-
-    # model items response.css('div.sf-flyout__options.js-flyout-options')
-    # each model response.css('div.sf-flyout__options.js-flyout-options').css('button').attrib['data-selected-value']
-    # index after .css('button') so loop and reqeust
-    # 'https://www.autotrader.co.uk/car-search?sort=relevance&postcode=n14an&radius=1500&make={VAUXHALL}&model={ADAM}&include-delivery-option=on'
-    # same logic as before with pages counts above 100
-    # if above>
-    #
+    start_urls = ['''https://www.autotrader.co.uk''']
 
 
-
-
-
-    rules = (
-            Rule(LinkExtractor(allow = ('/car-details/'), 
-            restrict_css = ('li.search-page__result')), 
-            callback = 'parse_car', follow=True),
-
-            Rule(LinkExtractor(restrict_css = ('a.paginationMini--right__active')), follow=True),
-            )
-
-    def parse_car(self, response):
+    def parse(self, response):
         '''
-        Yields a request for the api endpoint of an individual car 
-        advertisement.
+        Returns subquery requests for all car makes on autotrader website.
         '''
-        
-        parsed_url = urlparse(response.url)
-        advert_id = parsed_url.path.split('/')[-1]
 
-        for item in response.css('script::text').getall():
-            if re.search('window.AT.correlationId', item) != None:
-                string = item
-                break
+        car_makes_items = response.css('optgroup')[1].css('option')
+
+        for item in car_makes_items:
+            car_make = item.attrib['value']
+            make_url_query = ('https://www.autotrader.co.uk/car-search?postcode=n14an&radius=50&make={car_make}&include-delivery-option=on&advertising-location=at_cars&page=1'
+                              .format(car_make=car_make))
+                
+            yield scrapy.Request(client.scrapyGet(url=make_url_query), callback=self.parse_make_query,  
+                                    meta={'car_make': car_make})
             
-        correlation_id = re.search('\w+-\w+-\w+-\w+-\w+', string)[0]
-        
-        car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}?advertising-location=at_cars&guid={correlation_id}&include-delivery-option=on&onesearchad=New&onesearchad=Nearly%20New&onesearchad=Used&page=1&postcode=n14an&radius=1501&sort=relevance'''\
-                                    .format(advert_id=advert_id, correlation_id=correlation_id)
-        
-        yield scrapy.Request(car_details_api_endpoint, 
-                             callback=self.parse_car_api)
 
+    def parse_make_query(self, response):
+        '''
+        Returns subquery requests for all car models for each car make on 
+        autotrader website if page count is above 100.
+        '''
+
+        total_page_count = response.css('li.paginationMini__count').css('strong::text')[1].get().replace(',', '')
+        car_make = response.meta['car_make']
+        
+        # Autotrader website has a page limit of 100 pages.
+        # After page 100 there is no advert data
+        if int(total_page_count) > 100:
+            model_items = response.css('div.sf-flyout__options.js-flyout-options')[1].css('button')
+
+            for item in model_items:
+                car_model = item.attrib['data-selected-value']
+                make_model_url_query = ('https://www.autotrader.co.uk/car-search?postcode=n14an&radius=50&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&page=1'
+                                        .format(car_make=car_make, car_model=car_model))
+                
+                yield scrapy.Request(client.scrapyGet(url=make_model_url_query), callback=self.parse_model_query,  
+                                 meta={'car_make': car_make, 'car_model': car_model})
+
+        elif int(total_page_count) == 0:
+            pass
+
+        else:
+            car_car_link_extractor = LinkExtractor(allow = ('/car-details/'), restrict_css = ('li.search-page__result'))
+            for link in car_car_link_extractor.extract_links(response):
+                advert_id = int(re.search('\d{15}', link.url)[0])
+                car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
+                                            .format(advert_id=advert_id)
+        
+                yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
+            
+            page_extractor = LinkExtractor(restrict_css = ('a.paginationMini--right__active'))
+
+            try:
+                page_link = page_extractor.extract_links(response)[0]
+
+                yield scrapy.Request(client.scrapyGet(url=page_link.url), callback=self.extract_car_ads)
+
+            except IndexError:
+                pass
+
+
+    def extract_car_ads(self, response):
+        '''
+        Returns requests for each car ad in the search results and iterates thorugh
+        all pages.
+        '''
+
+        car_link_extractor = LinkExtractor(allow = ('/car-details/'), restrict_css = ('li.search-page__result'))
+        for link in car_link_extractor.extract_links(response):
+            advert_id = int(re.search('\d{15}', link.url)[0])
+            car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
+                                            .format(advert_id=advert_id)
+        
+            yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
+        
+        page_extractor = LinkExtractor(restrict_css = ('a.paginationMini--right__active'))
+        
+        try:
+            page_link = page_extractor.extract_links(response)[0]
+
+            yield scrapy.Request(client.scrapyGet(url=page_link.url), callback=self.extract_car_ads)
+
+        except IndexError:
+            pass
+
+    
+    def parse_model_query(self, response):
+        '''
+        Returns requests for price subqueries if page count is above 100.
+        '''
+        
+        total_page_count = response.css('li.paginationMini__count').css('strong::text')[1].get().replace(',', '')
+        car_make = response.meta['car_make']
+        car_model = response.meta['car_model']
+
+        if int(total_page_count) > 100:
+            price_items = response.css('select.js-max-select.searchone')[0].css('option::text').getall()
+            max_price = price_items[-1]
+            total_cars_no = re.search('\(\d+\)', max_price.replace(',', ''))[0]
+            # there should be less than 900 car ads on 100 pages
+            n = -(-int(total_cars_no.replace('(', '').replace(')', ''))//900)
+
+            for i in range (1, n+1):
+                top_limit = 900 * i
+                
+                if i == 1:
+                    
+                    for price in price_items:
+                        try:
+                            car_items_no = int(re.search('\(\d+\)', price.replace(',', ''))[0].replace('(', '').replace(')', ''))
+                            
+                            if car_items_no <= top_limit:
+                                price_to = int(re.search('£\d+', price.replace(',', ''))[0].replace('£', ''))
+
+                            else:
+                                break
+
+                        except TypeError:
+                            pass
+                                           
+                    make_model_price_url_query = ('https://www.autotrader.co.uk/car-search?sort=relevance&postcode=n14an&radius=50&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&price-to={price_to}&page=1'
+                                                  .format(car_make=car_make, car_model=car_model, price_to=price_to))
+                
+                    yield scrapy.Request(client.scrapyGet(url=make_model_price_url_query), callback=self.extract_car_ads)
+                                          
+                if i > 1:
+
+                    price_from = price_to
+
+                    for price in price_items:
+                        try:
+                            car_items_no = int(re.search('\(\d+\)', price.replace(',', ''))[0].replace('(', '').replace(')', ''))
+                            
+                            if car_items_no <= top_limit:
+                                price_to = int(re.search('£\d+', price.replace(',', ''))[0].replace('£', ''))
+
+                            else:
+                                break
+
+                        except TypeError:
+                            pass
+                                           
+                    make_model_price_url_query = ('https://www.autotrader.co.uk/car-search?sort=relevance&postcode=n14an&radius=50&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&price-from={price_from}&price-to={price_to}&page=1'
+                                                  .format(car_make=car_make, car_model=car_model, price_from=price_from, price_to=price_to))
+
+                    yield scrapy.Request(client.scrapyGet(url=make_model_price_url_query), callback=self.extract_car_ads)
+             
+        else:
+            car_link_extractor = LinkExtractor(allow = ('/car-details/'), restrict_css = ('li.search-page__result'))
+            for link in car_link_extractor.extract_links(response):
+                advert_id = int(re.search('\d{15}', link.url)[0])
+                car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
+                                            .format(advert_id=advert_id)
+        
+                yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
+            
+            page_extractor = LinkExtractor(restrict_css = ('a.paginationMini--right__active'))
+            
+            try:
+                page_link = page_extractor.extract_links(response)[0]
+
+                yield scrapy.Request(client.scrapyGet(url=page_link.url), callback=self.extract_car_ads)
+
+            except IndexError:
+                pass
+            
+    
     def parse_car_api(self, response):
         '''
         Returns a scrapy request for extra car specifications.
@@ -247,8 +355,7 @@ class AutotraderSpider(CrawlSpider):
         car_full_spec_api_endpoint = 'https://www.autotrader.co.uk/json/taxonomy/technical-specification?derivative={derivative_id}&channel=cars'\
                                      .format(derivative_id=gdv(item, ['derivative_id']) )
 
-        yield scrapy.Request(car_full_spec_api_endpoint, 
-                                 callback=self.parse_car_spec_api, 
+        yield scrapy.Request(client.scrapyGet(url=car_full_spec_api_endpoint), callback=self.parse_car_spec_api, 
                                  meta={'item': item})
 
 
@@ -283,7 +390,6 @@ class AutotraderSpider(CrawlSpider):
                         name = str(i['name']).lower().replace(' ', '_').replace('₂', '2')
                         value = i['value']
                         dic[name] = value
-
         
         il2.add_value('zero_to_sixty', gdv(dic, ['zero_to_sixty']))
         
