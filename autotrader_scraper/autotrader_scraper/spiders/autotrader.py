@@ -41,7 +41,7 @@ class AutotraderSpider(scrapy.Spider):
 
         for item in car_makes_items:
             car_make = item.attrib['value']
-            make_url_query = ('https://www.autotrader.co.uk/car-search?postcode=n14an&radius=50&make={car_make}&include-delivery-option=on&advertising-location=at_cars&page=1'
+            make_url_query = ('https://www.autotrader.co.uk/car-search?postcode=n14an&radius=1500&make={car_make}&include-delivery-option=on&advertising-location=at_cars&page=1'
                               .format(car_make=car_make))
                 
             yield scrapy.Request(client.scrapyGet(url=make_url_query), callback=self.parse_make_query,  
@@ -64,7 +64,7 @@ class AutotraderSpider(scrapy.Spider):
 
             for item in model_items:
                 car_model = item.attrib['data-selected-value']
-                make_model_url_query = ('https://www.autotrader.co.uk/car-search?postcode=n14an&radius=50&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&page=1'
+                make_model_url_query = ('https://www.autotrader.co.uk/car-search?postcode=n14an&radius=1500&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&page=1'
                                         .format(car_make=car_make, car_model=car_model))
                 
                 yield scrapy.Request(client.scrapyGet(url=make_model_url_query), callback=self.parse_model_query,  
@@ -162,7 +162,7 @@ class AutotraderSpider(scrapy.Spider):
                         except TypeError:
                             pass
                                            
-                    make_model_price_url_query = ('https://www.autotrader.co.uk/car-search?sort=relevance&postcode=n14an&radius=50&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&price-to={price_to}&page=1'
+                    make_model_price_url_query = ('https://www.autotrader.co.uk/car-search?sort=relevance&postcode=n14an&radius=1500&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&price-to={price_to}&page=1'
                                                   .format(car_make=car_make, car_model=car_model, price_to=price_to))
                 
                     yield scrapy.Request(client.scrapyGet(url=make_model_price_url_query), callback=self.extract_car_ads)
@@ -184,7 +184,7 @@ class AutotraderSpider(scrapy.Spider):
                         except TypeError:
                             pass
                                            
-                    make_model_price_url_query = ('https://www.autotrader.co.uk/car-search?sort=relevance&postcode=n14an&radius=50&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&price-from={price_from}&price-to={price_to}&page=1'
+                    make_model_price_url_query = ('https://www.autotrader.co.uk/car-search?sort=relevance&postcode=n14an&radius=1500&make={car_make}&model={car_model}&include-delivery-option=on&advertising-location=at_cars&price-from={price_from}&price-to={price_to}&page=1'
                                                   .format(car_make=car_make, car_model=car_model, price_from=price_from, price_to=price_to))
 
                     yield scrapy.Request(client.scrapyGet(url=make_model_price_url_query), callback=self.extract_car_ads)
