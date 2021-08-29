@@ -171,7 +171,12 @@ def get_manufactured_year_identifier(value):
         value = value
 
     else:
-        value = re.search('\(\w+', value)[0].replace('(', '')
+        try:
+            value = re.search('\(\w+', value)[0].replace('(', '')
+
+        except TypeError:
+            value = None
+
 
     return value
 
