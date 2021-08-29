@@ -6,6 +6,7 @@ from autotrader_scraper.items import AutotraderCarsItem
 from scrapy.loader import ItemLoader
 from datetime import datetime as dt 
 from autotrader_scraper.functions_module import get_dictionary_value as gdv
+from autotrader_scraper.car_ads import advert_ids
 from scraper_api import ScraperAPIClient
 from autotrader_scraper.config import API_KEY
 
@@ -76,10 +77,15 @@ class AutotraderSpider(scrapy.Spider):
             car_car_link_extractor = LinkExtractor(allow = ('/car-details/'), restrict_css = ('li.search-page__result'))
             for link in car_car_link_extractor.extract_links(response):
                 advert_id = int(re.search('\d{15}', link.url)[0])
-                car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
+
+                if advert_id in advert_ids:
+                    pass
+
+                else:
+                    car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
                                             .format(advert_id=advert_id)
         
-                yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
+                    yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
             
             page_extractor = LinkExtractor(restrict_css = ('a.paginationMini--right__active'))
 
@@ -101,10 +107,15 @@ class AutotraderSpider(scrapy.Spider):
         car_link_extractor = LinkExtractor(allow = ('/car-details/'), restrict_css = ('li.search-page__result'))
         for link in car_link_extractor.extract_links(response):
             advert_id = int(re.search('\d{15}', link.url)[0])
-            car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
+            
+            if advert_id in advert_ids:
+                pass
+
+            else:
+                car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
                                             .format(advert_id=advert_id)
         
-            yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
+                yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
         
         page_extractor = LinkExtractor(restrict_css = ('a.paginationMini--right__active'))
         
@@ -182,10 +193,15 @@ class AutotraderSpider(scrapy.Spider):
             car_link_extractor = LinkExtractor(allow = ('/car-details/'), restrict_css = ('li.search-page__result'))
             for link in car_link_extractor.extract_links(response):
                 advert_id = int(re.search('\d{15}', link.url)[0])
-                car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
+
+                if advert_id in advert_ids:
+                    pass
+
+                else:
+                    car_details_api_endpoint = '''https://www.autotrader.co.uk/json/fpa/initial/{advert_id}'''\
                                             .format(advert_id=advert_id)
         
-                yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
+                    yield scrapy.Request(client.scrapyGet(url=car_details_api_endpoint), callback=self.parse_car_api)
             
             page_extractor = LinkExtractor(restrict_css = ('a.paginationMini--right__active'))
             
