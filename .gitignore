@@ -17,3 +17,4 @@ data_preparation/.ipynb_checkpoints/data_cleaning-checkpoint.py
 .python-version
 eda/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 test.py
+data_preparation/cars_data.pkl
