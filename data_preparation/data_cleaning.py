@@ -137,7 +137,7 @@ def clean_round1(df):
 
 def combine_make_model_trim(df):
     '''
-    
+    Combines make, model and trim columns.
     '''
     
     df = df.copy()
