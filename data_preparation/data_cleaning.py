@@ -156,3 +156,10 @@ def combine_make_model_trim(df):
        'total_reviews', 'region', 'county', 'town', 'ulez']]
 
     return df
+
+def get_percentage_nulls(df):
+    '''
+    Returns percentage of nulls in each coumn in decreasing order.
+    '''
+    
+    return (df.isnull().sum()*100/len(df)).sort_values(ascending=False)
