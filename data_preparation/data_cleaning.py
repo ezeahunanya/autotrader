@@ -169,7 +169,10 @@ def get_percentage_nulls(df):
 
 
 def drop_rows_with_small_percentage_of_missing_values(df):
-
+    '''
+    Returns dataframe after rows in columns with less than 0.1% of missing values are dropped.
+    '''
+    
     df = df.copy()
     columns=[]
     for index, percentage in get_percentage_nulls(df).items():
@@ -180,6 +183,9 @@ def drop_rows_with_small_percentage_of_missing_values(df):
 
 
 def fill_columns_with_missing_values(df):
+    '''
+    Returns dataframe after inputing missing values using groupby on car make.
+    '''
     
     columns = ['boot_space_seats_down', 'urban', 'extra_urban',
      'boot_space_seats_up', 'fuel_tank_capacity', 'combined', 'tax',
@@ -205,6 +211,9 @@ def fill_columns_with_missing_values(df):
     return df    
 
 def predict_no_of_owners(df):
+    '''
+    Predicts missing values for number of owners using numerical columns with no missing values.
+    '''
     
     data = df.loc[:, ['mileage', 'manufactured_year', 'engine_power', 'valves', 'cylinders', 'number_of_owners']]
 
@@ -224,7 +233,10 @@ def predict_no_of_owners(df):
     return y_pred
 
 def fill_number_of_owners_with_predictions(df):
-
+    '''
+    Fills number of owners using predictions made.
+    '''
+    
     df = df.copy()
     number_of_owners_predictions = pd.Series(predict_no_of_owners(df), index=df[df.number_of_owners.isnull()].index)
     df.number_of_owners = df.number_of_owners.fillna(number_of_owners_predictions)
