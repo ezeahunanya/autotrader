@@ -123,8 +123,8 @@ def clean_round1(df):
                         'combined': 'float', 'seller_rating': 'float'
                         })
 
-    df['make'] = df.make.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore')
-    df['model'] = df.model.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore')
+    df['make'] = df.make.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
+    df['model'] = df.model.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
     df['trim'] = df.trim.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore')
     df['body_type'] = df.body_type.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
     df['transmission'] = df.transmission.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
@@ -197,16 +197,16 @@ def fill_columns_with_missing_values(df):
     
     for column in columns:
         if df[column].dtype == pd.Int64Dtype():
-            df[column] = df.groupby(['make_model_trim','manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
-            df[column] = df.groupby('make_model_trim')[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+            df[column] = df.groupby(['make', 'model', 'trim','manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+            df[column] = df.groupby(['make', 'model', 'trim'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
 
         elif df[column].dtype == float:
-            df[column] = df.groupby(['make_model_trim','manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
-            df[column] = df.groupby('make_model_trim')[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby(['make', 'model', 'trim', 'manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby(['make', 'model', 'trim'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
         
         else:
-            df[column] = df.groupby(['make_model_trim','manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
-            df[column] = df.groupby('make_model_trim')[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby(['make', 'model', 'trim', 'manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby(['make', 'model', 'trim'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
     
     return df    
 
@@ -242,3 +242,13 @@ def fill_number_of_owners_with_predictions(df):
     df.number_of_owners = df.number_of_owners.fillna(number_of_owners_predictions)
     
     return df    
+
+def fill_trim_missing_values(df):
+    '''
+    Fill missing values in trim column.
+    '''
+
+    df = df.copy()
+    df.trim = df.trim.fillna('base').astype('category')
+
+    return df
