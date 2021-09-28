@@ -1,8 +1,10 @@
 import mysql.connector
 from autotrader_scraper.autotrader_scraper.config import mysql_details
 import pandas as pd
+from sklearn.linear_model import LinearRegression
+import numpy as np
 
-def get_data():
+def get_data_from_database():
     '''
     Return full dataset with vehicle features and seller information joined
     in one table.
@@ -142,6 +144,7 @@ def combine_make_model_trim(df):
     
     df = df.copy()
     df['make_model_trim'] = df.make + '_' + df.model + '_' + df.trim.fillna('')
+    df['make_model_trim'] = df['make_model_trim'].apply(lambda x: x.strip('_'))
     df['make_model_trim'] = df['make_model_trim'].astype('category')
     df.drop(['make', 'model', 'trim'], axis=1, inplace=True)
 
@@ -163,3 +166,67 @@ def get_percentage_nulls(df):
     '''
     
     return (df.isnull().sum()*100/len(df)).sort_values(ascending=False)
+
+
+def drop_rows_with_small_percentage_of_missing_values(df):
+
+    df = df.copy()
+    columns=[]
+    for index, percentage in get_percentage_nulls(df).items():
+        if percentage < 0.1:
+            columns.append(index)
+    
+    return df.dropna(subset=columns)
+
+
+def fill_columns_with_missing_values(df):
+    
+    columns = ['boot_space_seats_down', 'urban', 'extra_urban',
+     'boot_space_seats_up', 'fuel_tank_capacity', 'combined', 'tax',
+     'engine_torque', 'insurance_group', 'top_speed', 'width', 'wheelbase',
+     'height', 'length', 'seats', 'co2_emissions', 'engine_size', 'mileage',
+     'doors']
+
+    df = df.copy()
+    
+    for column in columns:
+        if df[column].dtype == pd.Int64Dtype():
+            df[column] = df.groupby(['make_model_trim','manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+            df[column] = df.groupby('make_model_trim')[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+
+        elif df[column].dtype == float:
+            df[column] = df.groupby(['make_model_trim','manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby('make_model_trim')[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+        
+        else:
+            df[column] = df.groupby(['make_model_trim','manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby('make_model_trim')[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+    
+    return df    
+
+def predict_no_of_owners(df):
+    
+    data = df.loc[:, ['mileage', 'manufactured_year', 'engine_power', 'valves', 'cylinders', 'number_of_owners']]
+
+    test_data = data[data.number_of_owners.isnull()]
+    data.dropna(inplace=True)
+
+    y_train = data.number_of_owners
+    X_train = data.drop("number_of_owners", axis=1)
+    X_test = test_data.drop("number_of_owners", axis=1)
+
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+    y_pred = np.around(y_pred).astype(int)
+    
+    return y_pred
+
+def fill_number_of_owners_with_predictions(df):
+
+    df = df.copy()
+    number_of_owners_predictions = pd.Series(predict_no_of_owners(df), index=df[df.number_of_owners.isnull()].index)
+    df.number_of_owners = df.number_of_owners.fillna(number_of_owners_predictions)
+    
+    return df    
