@@ -252,3 +252,22 @@ def fill_trim_missing_values(df):
     df.trim = df.trim.fillna('base').astype('category')
 
     return df
+
+
+def fix_int_datatypes(df):
+    '''
+    Converts columns with Int64 datatypes into int.
+    '''
+
+    df = df.copy()
+    df = df.astype(dtype={'manufactured_year': 'int', 'mileage': 'int',
+                        'doors': 'int', 'seats': 'int',
+                        'number_of_owners': 'int', 'tax': 'int',
+                        'top_speed': 'int', 'cylinders': 'int',
+                        'valves': 'int', 'engine_power': 'int',
+                        'height': 'int', 'length': 'int',
+                        'wheelbase': 'int', 'width': 'int',
+                        'boot_space_seats_up': 'int', 'boot_space_seats_down': 'int',
+                        'co2_emissions': 'int', 'total_reviews': 'int'})
+                        
+    return df
