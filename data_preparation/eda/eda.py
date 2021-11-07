@@ -227,3 +227,51 @@ def plot_seats(df):
 
     ax.scatter(df.seats, df.price, alpha=0.5)
     ax.set(ylabel= 'Price (£)', xlabel='Seats')
+
+
+def plot_eda_subplot5(df):
+    '''
+    Returns a group of plots of variables vs price.
+    '''
+
+    mean_price_by_make = df.groupby('make')['price'].mean().round(0).dropna().astype('int').sort_values(ascending=False)
+    mean_price_by_model = df.groupby('model')['price'].mean().round(0).dropna().astype('int').sort_values(ascending=False)
+    
+    df.fuel_type = df.fuel_type.astype('object').astype('category')
+    df.body_type = df.body_type.astype('object').astype('category')
+
+    fig, ax = plt.subplots(2, 3, figsize=[24, 15])
+    base_color = sns.color_palette()[0]
+
+    N = 10
+    ticks = np.arange(N) 
+    width = 0.7   
+
+    # fig 1 
+    ax[0,0].bar(ticks, mean_price_by_make.values[:N], width)
+    ax[0,0].set_xticks(ticks) 
+    ax[0,0].set_xticklabels(mean_price_by_make.index[:N], rotation=45)
+    ax[0,0].set(ylabel= 'Mean Price (£)', xlabel='Car Make')
+
+    # fig 2
+    ax[0,1].bar(ticks, mean_price_by_model.values[:N], width)
+    ax[0,1].set_xticks(ticks) 
+    ax[0,1].set_xticklabels(mean_price_by_model.index[:N], rotation=45)
+    ax[0,1].set(ylabel= 'Mean Price (£)', xlabel='Model')
+
+    # fig 3
+    sns.boxplot(data = df, x = 'transmission', y = 'price', ax=ax[0,2], color=base_color)
+    ax[0,2].set(ylabel= 'Price (£)', xlabel='Transmission')
+
+    # fig 4
+    sns.boxplot(data = df, x = 'fuel_type', y = 'price', ax=ax[1,0], color=base_color)
+    ax[1,0].tick_params(axis='x', labelrotation=45)
+    ax[1,0].set(ylabel= 'Price (£)', xlabel='Fuel Type')
+
+    # fig 5
+    sns.boxplot(data = df, x = 'body_type', y = 'price', ax=ax[1,1], color=base_color)
+    ax[1,1].tick_params(axis='x', labelrotation=45)
+    ax[1,1].set(ylabel= 'Price (£)', xlabel='Body Type')
+
+    fig.tight_layout()
+    fig.delaxes(ax[1,2])
