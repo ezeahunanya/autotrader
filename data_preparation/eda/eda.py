@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set()
 
+
 def get_label_encoding_for_categoricals(df):
     '''
     Return a dataframe with label encoding for categorical columns.
@@ -31,6 +32,7 @@ def make_mi_scores(X, y):
     
     return mi_scores
 
+
 def plot_mi_scores(scores):
     '''
     Plots mutual information scores on bar chart.
@@ -43,6 +45,7 @@ def plot_mi_scores(scores):
     plt.barh(width, scores)
     plt.yticks(width, ticks)
     plt.title("Mutual Information Scores")
+
 
 def plot_price_histogram(df):
     '''
@@ -59,6 +62,7 @@ def plot_price_histogram(df):
     plt.title('Price Histogram')
 
     return plt.figure
+
 
 def plot_price_historgam_subplot(df):
     '''
@@ -77,6 +81,7 @@ def plot_price_historgam_subplot(df):
     ax[1].hist(data = df, x = 'price', bins = bins)
     ax[1].set(ylabel= 'Frequency', xlabel='Price (£)')
     ax[1].set_xlim(0, 60000);
+
 
 def plot_eda_subplot1(df):
     '''
@@ -111,4 +116,103 @@ def plot_eda_subplot1(df):
 
     # fig 6
     ax[1,2].scatter(df.engine_power, df.price, alpha=alpha)
-    ax[1,2].set(ylabel= 'Price (£)', xlabel='Engine Power (bhp)');
+    ax[1,2].set(ylabel= 'Price (£)', xlabel='Engine Power (bhp)')
+
+
+def plot_eda_subplot2(df):
+    '''
+    Returns a group of plots of variables vs price.
+    '''
+
+    fig, ax = plt.subplots(2, 3, figsize=[24, 15])
+    alpha = 0.5
+
+    # fig 1
+    ax[0,0].scatter(df.engine_torque, df.price, alpha=0.5)
+    ax[0,0].set(ylabel= 'Price (£)', xlabel='Engine Torque (lbs/ft)')
+
+    # fig 2
+    ax[0,1].scatter(df.mileage, df.price, alpha=0.5)
+    ax[0,1].set(ylabel= 'Price (£)', xlabel='Mileage (miles)')
+
+    # fig 3
+    ax[0,2].scatter(df.fuel_tank_capacity, df.price, alpha=0.5)
+    ax[0,2].set(ylabel= 'Price (£)', xlabel='Fuel Tank Capacity (L)')
+
+    # fig 4
+    ax[1,0].scatter(df.co2_emissions, df.price, alpha=0.5)
+    ax[1,0].set(ylabel= 'Price (£)', xlabel='CO2 Emmissions (g/km)')
+
+    # fig 5
+    ax[1,1].scatter(df.tax, df.price, alpha=0.5)
+    ax[1,1].set(ylabel= 'Price (£)', xlabel='Annual Tax (£)')
+
+    # fig 6
+    ax[1,2].scatter(df.number_of_owners, df.price, alpha=0.5)
+    ax[1,2].set(ylabel= 'Price (£)', xlabel='Number of Owners')
+
+
+def plot_eda_subplot3(df):
+    '''
+    Returns a group of plots of variables vs price.
+    '''
+
+    fig, ax = plt.subplots(2, 3, figsize=[24, 15])
+    alpha = 0.5
+
+    # fig 1
+    ax[0,0].scatter(df.top_speed, df.price, alpha=alpha)
+    ax[0,0].set(ylabel= 'Price (£)', xlabel='Top Speed (mph)')
+
+    # fig 2
+    ax[0,1].scatter(df.total_reviews, df.price, alpha=alpha)
+    ax[0,1].set(ylabel= 'Price (£)', xlabel='Total Reviews')
+
+    # fig 3
+    ax[0,2].scatter(df.engine_size, df.price, alpha=alpha)
+    ax[0,2].set(ylabel= 'Price (£)', xlabel='Engine Size (L)')
+
+    # fig 4
+    ax[1,0].scatter(df.combined, df.price, alpha=alpha)
+    ax[1,0].set(ylabel= 'Price (£)', xlabel='Combined (mpg)')
+
+    # fig 5
+    ax[1,1].scatter(df.urban, df.price, alpha=alpha)
+    ax[1,1].set(ylabel= 'Price (£)', xlabel='Urban (mpg)')
+
+    # fig 6
+    ax[1,2].scatter(df.extra_urban, df.price, alpha=alpha)
+    ax[1,2].set(ylabel= 'Price (£)', xlabel='Extra Urban (mpg)')
+
+
+def plot_eda_subplot4(df):
+    '''
+    Returns a group of plots of variables vs price.
+    '''
+
+    fig, ax = plt.subplots(2, 3, figsize=[24, 15])
+    alpha = 0.5
+
+    # fig 1
+    ax[0,0].scatter(df.valves, df.price, alpha=alpha)
+    ax[0,0].set(ylabel= 'Price (£)', xlabel='Valves')
+
+    # fig 2
+    ax[0,1].scatter(df.vehicle_location_longitude, df.price, alpha=alpha)
+    ax[0,1].set(ylabel= 'Price (£)', xlabel='Vehicle Location Longitude')
+
+    # fig 3
+    ax[0,2].scatter(df.cylinders, df.price, alpha=alpha)
+    ax[0,2].set(ylabel= 'Price (£)', xlabel='Cylinders')
+
+    # fig 4
+    ax[1,0].scatter(df.seller_rating, df.price, alpha=alpha)
+    ax[1,0].set(ylabel= 'Price (£)', xlabel='Seller Rating')
+
+    # fig 5
+    ax[1,1].scatter(df.number_of_photos, df.price, alpha=alpha)
+    ax[1,1].set(ylabel= 'Price (£)', xlabel='Number of Photos ')
+
+    # fig 6
+    ax[1,2].scatter(df.doors, df.price, alpha=alpha)
+    ax[1,2].set(ylabel= 'Price (£)', xlabel='Doors')
