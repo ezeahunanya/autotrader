@@ -44,7 +44,7 @@ def plot_mi_scores(scores):
 
 def plot_price_histogram(df):
     '''
-    
+    Plots price histogram.
     '''    
     
     binsize = 1000
