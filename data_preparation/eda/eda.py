@@ -75,3 +75,38 @@ def plot_price_historgam_subplot(df):
     ax[1].hist(data = df, x = 'price', bins = bins)
     ax[1].set(ylabel= 'Frequency', xlabel='Price (£)')
     ax[1].set_xlim(0, 60000);
+
+def plot_eda_subplot1(df):
+    '''
+    Returns a group of plots of variables vs price.
+    '''
+
+    fig, ax = plt.subplots(2, 3, figsize=[24, 15])
+    alpha = 0.5
+    
+    # fig 1
+    ax[0,0].scatter(df.length, df.price, alpha=alpha)
+    ax[0,0].set(ylabel= 'Price (£)', xlabel='Length (mm)')
+
+    # fig 2
+    ax[0,1].scatter(df.boot_space_seats_down, df.price, alpha=alpha)
+    ax[0,1].set(ylabel= 'Price (£)', xlabel='Boot Space (L)')
+    ax[0,1].scatter(df.boot_space_seats_up, df.price, alpha=alpha)
+    ax[0,1].set_xlim(0, 3000)
+    ax[0,1].legend(['Seats Down', 'Seats Up'], loc="upper right")
+
+    # fig 3
+    ax[0,2].scatter(df.wheelbase, df.price, alpha=alpha)
+    ax[0,2].set(ylabel= 'Price (£)', xlabel='Wheelbase (mm)')
+
+    # fig 4
+    ax[1,0].scatter(df.width, df.price, alpha=alpha)
+    ax[1,0].set(ylabel= 'Price (£)', xlabel='Height (mm)')
+
+    # fig 5
+    ax[1,1].scatter(df.manufactured_year, df.price, alpha=alpha)
+    ax[1,1].set(ylabel= 'Price (£)', xlabel='Manufactured Year')
+
+    # fig 6
+    ax[1,2].scatter(df.engine_power, df.price, alpha=alpha)
+    ax[1,2].set(ylabel= 'Price (£)', xlabel='Engine Power (bhp)');
