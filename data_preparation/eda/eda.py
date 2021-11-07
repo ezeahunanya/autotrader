@@ -216,3 +216,14 @@ def plot_eda_subplot4(df):
     # fig 6
     ax[1,2].scatter(df.doors, df.price, alpha=alpha)
     ax[1,2].set(ylabel= 'Price (£)', xlabel='Doors')
+
+
+def plot_seats(df):
+    '''
+    Returns plot of price vs seats.
+    '''
+
+    fig, ax = plt.subplots(figsize=[8, 5])
+
+    ax.scatter(df.seats, df.price, alpha=0.5)
+    ax.set(ylabel= 'Price (£)', xlabel='Seats')
