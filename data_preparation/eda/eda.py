@@ -57,3 +57,21 @@ def plot_price_histogram(df):
     plt.title('Price Histogram')
 
     return plt.figure
+
+def plot_price_historgam_subplot(df):
+    '''
+    Returns subplot with price histogram. The first with full range of prices and the second
+    with values up to 60000.
+    '''
+
+    fig, ax = plt.subplots(1, 2, figsize=[16, 5])
+
+    binsize = 1000
+    bins = np.arange(0, df.price.max()+binsize, binsize)
+
+    ax[0].hist(data = df, x = 'price', bins = bins)
+    ax[0].set(ylabel= 'Frequency', xlabel='Price (£)')
+
+    ax[1].hist(data = df, x = 'price', bins = bins)
+    ax[1].set(ylabel= 'Frequency', xlabel='Price (£)')
+    ax[1].set_xlim(0, 60000);
