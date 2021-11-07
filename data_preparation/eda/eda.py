@@ -30,8 +30,11 @@ def make_mi_scores(X, y):
     return mi_scores
 
 def plot_mi_scores(scores):
+    '''
+    Plots mutual information scores on bar chart.
+    '''
 
-
+    plt.figure(figsize=(8, 10))
     scores = scores.sort_values(ascending=True)
     width = np.arange(len(scores))
     ticks = list(scores.index)
@@ -40,7 +43,10 @@ def plot_mi_scores(scores):
     plt.title("Mutual Information Scores")
 
 def plot_price_histogram(df):
-        
+    '''
+    
+    '''    
+    
     binsize = 1000
     bins = np.arange(0, df.price.max()+binsize, binsize)
 
