@@ -1,5 +1,12 @@
+import sys
+import os
+
+module_path = os.path.abspath(os.path.join('..'))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+
 import mysql.connector
-from autotrader_scraper.autotrader_scraper.config import mysql_details
+from data_preparation.autotrader_scraper.autotrader_scraper.config import mysql_details
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import numpy as np
