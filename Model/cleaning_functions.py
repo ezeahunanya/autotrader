@@ -8,6 +8,7 @@ if module_path not in sys.path:
 import mysql.connector
 from data_preparation.autotrader_scraper.autotrader_scraper.config import mysql_details
 import pandas as pd
+import numpy as np
 
 def load_data_from_database():
     '''
@@ -47,3 +48,33 @@ def drop_columns(df):
                        'number_of_photos', 'tax', 'cylinders', 'valves', 'combined', 'insurance_group', 'boot_space_seats_down']
 
     return df.drop(columns_to_drop, axis=1)
+
+
+def fill_columns_with_missing_values(df):
+    '''
+    Returns dataframe after inputing missing values using groupby on car make.
+    '''
+    
+    columns = ['urban', 'extra_urban', 'boot_space_seats_up', 'fuel_tank_capacity',
+       'engine_torque', 'top_speed', 'width', 'wheelbase', 'height',
+       'length', 'co2_emissions', 'engine_size', 'engine_power']
+
+    df = df.copy()
+    
+    for column in columns:
+        if df[column].dtype == pd.Int64Dtype():
+            df[column] = df.groupby(['make', 'model', 'trim','manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+            df[column] = df.groupby(['make', 'model', 'trim'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+            df[column] = df.groupby(['make', 'model'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+
+        elif df[column].dtype == float:
+            df[column] = df.groupby(['make', 'model', 'trim', 'manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby(['make', 'model', 'trim'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby(['make', 'model'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+        
+        else:
+            df[column] = df.groupby(['make', 'model', 'trim', 'manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby(['make', 'model', 'trim'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
+            df[column] = df.groupby(['make', 'model'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
+    
+    return df    
