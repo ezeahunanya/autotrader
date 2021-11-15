@@ -44,6 +44,6 @@ def drop_columns(df):
                        'mileage_deviation', 'mileage_deviation_type', 'number_of_photos', 
                        'body_type', 'transmission', 'fuel_type', 'doors', 'seats', 'number_of_owners', 'emission_scheme',
                        'vehicle_location_latitude', 'vehicle_location_longitude', 'imported',
-                       'number_of_photos', 'tax', 'cylinders', 'valves', 'combined', 'insurance_group']
+                       'number_of_photos', 'tax', 'cylinders', 'valves', 'combined', 'insurance_group', 'boot_space_seats_down']
 
     return df.drop(columns_to_drop, axis=1)
