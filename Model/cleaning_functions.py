@@ -9,6 +9,8 @@ import mysql.connector
 from data_preparation.autotrader_scraper.autotrader_scraper.config import mysql_details
 import pandas as pd
 import numpy as np
+from data_preparation.data_cleaning import combine_CO2_columns, fill_trim_missing_values
+
 
 def load_data_from_database():
     '''
@@ -29,6 +31,7 @@ def load_data_from_database():
     cnx.close()
 
     return pd.DataFrame(full_results)
+
 
 def drop_columns(df):
     '''
@@ -78,3 +81,32 @@ def fill_columns_with_missing_values(df):
             df[column] = df.groupby(['make', 'model'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else pd.NA))
     
     return df    
+
+
+def fix_int_datatypes(df):
+    '''
+    Converts columns with Int64 datatypes into int.
+    '''
+
+    df = df.copy()
+    df = df.astype(dtype={'manufactured_year': 'int', 'mileage': 'int',
+                          'top_speed': 'int', 'cylinders': 'int',
+                          'engine_power': 'int', 'height': 'int', 'length': 'int',
+                          'wheelbase': 'int', 'width': 'int', 'boot_space_seats_up': 'int',
+                          'co2_emissions': 'int'})
+                        
+    return df
+
+
+def fix_formatting(df):
+    '''
+    Makes strings lowercase and replaces space with '_'.
+    '''
+    
+    df['make'] = df.make.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
+    df['model'] = df.model.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
+    df['trim'] = df.trim.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
+
+    return df
+
+
