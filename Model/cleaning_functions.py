@@ -90,8 +90,7 @@ def fix_int_datatypes(df):
 
     df = df.copy()
     df = df.astype(dtype={'manufactured_year': 'int', 'mileage': 'int',
-                          'top_speed': 'int', 'cylinders': 'int',
-                          'engine_power': 'int', 'height': 'int', 'length': 'int',
+                          'top_speed': 'int', 'engine_power': 'int', 'height': 'int', 'length': 'int',
                           'wheelbase': 'int', 'width': 'int', 'boot_space_seats_up': 'int',
                           'co2_emissions': 'int'})
                         
@@ -103,10 +102,23 @@ def fix_formatting(df):
     Makes strings lowercase and replaces space with '_'.
     '''
     
-    df['make'] = df.make.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
-    df['model'] = df.model.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
-    df['trim'] = df.trim.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
+    df['make'] = df['make'].map(lambda x: x.strip().lower().replace(' ', '-')).astype('category')
+    df['model'] = df['model'].map(lambda x: x.strip().lower().replace(' ', '-')).astype('category')
+    df['trim'] = df['trim'].map(lambda x: x.strip().lower().replace(' ', '-')).astype('category')
 
     return df
 
 
+def prepare_data():
+    '''Load and clean data for modelling.'''
+
+    df = load_data_from_database()
+    df = drop_columns(df)
+    df = combine_CO2_columns(df)
+    df = fill_columns_with_missing_values(df)
+    df = fill_trim_missing_values(df)
+    df = df.dropna()
+    df = fix_int_datatypes(df)
+    df = fix_formatting(df)
+    
+    return df
