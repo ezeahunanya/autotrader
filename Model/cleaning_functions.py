@@ -93,7 +93,7 @@ def fix_int_datatypes(df):
                           'top_speed': 'int', 'engine_power': 'int', 'height': 'int', 'length': 'int',
                           'wheelbase': 'int', 'width': 'int', 'boot_space_seats_up': 'int',
                           'co2_emissions': 'int', 'engine_size': 'float', 'engine_torque': 'float', 'urban': 'float',
-                          'extra_urban': 'float', })
+                          'extra_urban': 'float', 'fuel_tank_capacity': 'int' })
                         
     return df
 
