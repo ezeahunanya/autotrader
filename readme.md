@@ -34,8 +34,8 @@ To create the training data for the price prediction model run:
 python scripts/preprocess_price_prediction_model.py
 ```
 
-This will output training data to `data/training_data.csv`. To train the model run 
+This will output training data to `data/training_data.csv`. To train the model using this training data run: 
 ```
 python scripts/train_price_prediction_model.py
 ``` 
-This will output the trained model and the model metrics (optimized hyperparameters, evaluation metrics, feature importances) and save to `models/`.
+This will output the trained model and the model metrics (optimized hyperparameters, evaluation metrics and feature importances) and save to `models/`.
