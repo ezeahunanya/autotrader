@@ -1,24 +1,20 @@
 
 *.pyc
 *.docx
+**/.ipynb_checkpoints/**
 autotrader_scraper/cars.csv
 autotrader_scraper/autotrader_scraper/MYSQL_user_details.py
 Test4.py
 Test 3.py
 test5.py
 autotrader_scraper/autotrader_scraper/config.py
-.ipynb_checkpoints/Data Cleaning-checkpoint.ipynb
 data_preparation/autotrader_scraper/cars.csv
 data_preparation/autotrader_scraper/autotrader_scraper/config.py
-data_preparation/.ipynb_checkpoints/data_cleaning-checkpoint.ipynb
-data_preparation/.ipynb_checkpoints/Data Cleaning-checkpoint.ipynb
-.ipynb_checkpoints/Untitled-checkpoint.ipynb
-data_preparation/.ipynb_checkpoints/data_cleaning-checkpoint.py
 .python-version
-eda/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 test.py
 data_preparation/cars_data.pkl
 data_preparation/car_data.pkl
-data_preparation/eda/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 data_preparation/eda/car_data.pkl
-Model/car_dataset.pkl
+model/car_dataset.pkl
+scratch_pad.ipynb
+.vscode/
