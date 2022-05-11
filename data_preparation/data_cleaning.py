@@ -1,41 +1,37 @@
 import sys
 import os
-
 module_path = os.path.abspath(os.path.join('..'))
-print(module_path)
-print(sys.path)
-if module_path not in sys.path:
-    sys.path.append(module_path)
+sys.path = [module_path] + sys.path
 
-# import mysql.connector
-# from data_preparation.autotrader_scraper.autotrader_scraper.config import mysql_details
+import mysql.connector
+from data_preparation.autotrader_scraper.autotrader_scraper.config import mysql_details
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import numpy as np
 from collections import defaultdict
 
-# def get_data_from_database() -> pd.DataFrame:
-#     '''
-#     Return full dataset with vehicle features and seller information joined
-#     in one table.
-#     '''
+def get_data_from_database() -> pd.DataFrame:
+    '''
+    Return full dataset with vehicle features and seller information joined
+    in one table.
+    '''
 
-#     DB_NAME = 'autotrader_adverts'
+    DB_NAME = 'autotrader_adverts'
     
-#     cnx = mysql.connector.connect(**mysql_details)
-#     cursor = cnx.cursor(dictionary=True)
+    cnx = mysql.connector.connect(**mysql_details)
+    cursor = cnx.cursor(dictionary=True)
 
-#     cursor.execute("USE {}".format(DB_NAME))
-#     cursor.execute('''SELECT * 
-#                   FROM vehicle_features as vf
-#                   LEFT JOIN sellers as s
-#                   ON vf.seller_id=s.seller_id
-#                   ORDER BY date_scraped ASC, time_scraped ASC''')
+    cursor.execute("USE {}".format(DB_NAME))
+    cursor.execute('''SELECT * 
+                  FROM vehicle_features as vf
+                  LEFT JOIN sellers as s
+                  ON vf.seller_id=s.seller_id
+                  ORDER BY date_scraped ASC, time_scraped ASC''')
     
-#     full_results = cursor.fetchall()
-#     cnx.close()
+    full_results = cursor.fetchall()
+    cnx.close()
 
-#     return pd.DataFrame(full_results)
+    return pd.DataFrame(full_results)
 
 
 def drop_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -209,14 +205,6 @@ def fill_columns_with_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
-def train_no_of_owners_model(df: pd.DataFrame) -> np.ndarray:
-    '''
-    Trains regression model which predicts missing values for number of owners using numerical columns with no missing values.     
-    '''
-    data = df.loc[:, ['mileage', 'manufactured_year', 'engine_power', 'valves', 'cylinders', 'number_of_owners']]
-
-
-
 def predict_no_of_owners(df: pd.DataFrame) -> np.ndarray:
     '''
     Predicts missing values for number of owners using numerical columns with no missing values.
@@ -278,10 +266,3 @@ def fix_int_datatypes(df):
                         'co2_emissions': 'int', 'total_reviews': 'int'})
                         
     return df
-
-
-if __name__ == '__main__':
-    df = pd.read_csv('/Users/brook/downloads/data.csv')
-    print(df.head())
-    print(df.shape)
-
