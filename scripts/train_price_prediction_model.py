@@ -111,5 +111,6 @@ if __name__ == '__main__':
     y = training_data['price'].apply(lambda x: np.log(1+x)) # Changing target variable to log of price cause price is massively right skewed
     model, model_details = main(X, y)
     pprint(model_details, sort_dicts=False)
+    print(f"\nThe average root meat squared percentage error (of the interquartile range) for this model is {round(model_details['best_trial']['rmse_percentage_of_iqr'], 2)}%")
     save_as_pickle(obj=model, filepath=PROJ_DIR+'/models/price_prediction_model.pkl')
     save_as_json(obj=model_details, filepath=PROJ_DIR+'/models/price_prediction_metrics.json')
