@@ -27,6 +27,15 @@ from the command line. Then run the following command:
 scrapy crawl autotrader
 ```
 
+## Prediction Model
 
-To create the training data for the price prediction model run `python scripts/preprocess_price_prediction_model.py`. This will output training data to `data/training_data.csv`.
-To train the model run `python scripts/train_price_prediction_model.py`. This will output the trained model and the model metrics (optimized hyperparameters, evaluation metrics, feature importances) and save to `models/`.
+To create the training data for the price prediction model run: 
+```
+python scripts/preprocess_price_prediction_model.py
+```
+
+This will output training data to `data/training_data.csv`. To train the model run 
+```
+python scripts/train_price_prediction_model.py
+``` 
+This will output the trained model and the model metrics (optimized hyperparameters, evaluation metrics, feature importances) and save to `models/`.
