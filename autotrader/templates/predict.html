@@ -1,0 +1,79 @@
+{% extends 'base.html' %} {% block title %} Home Page {% endblock %} {% block content %}
+<h1>Home Page</h1>
+<image src="{{ url_for('static', filename='images/autotrader_logo.jpeg') }}">
+
+    <form action="/predict" method="POST" id="predict">
+        <h1>Input Features</h1>
+        <div class="field">
+            <label for="manufactured_year">Manufacture Year:</label>
+            <input type="text" id="manufactured_year" name="manufactured_year" placeholder="e.g. 2008" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="mileage">Mileage:</label>
+            <input type="text" id="mileage" name="mileage" placeholder="e.g. 500" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="engine_size">Engine Size:</label>
+            <input type="text" id="engine_size" name="engine_size" placeholder="e.g. 20" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="top_speed">Top Speed:</label>
+            <input type="text" id="email" name="top_speed" placeholder="e.g. 120" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="engine_power">Engine Power:</label>
+            <input type="text" id="engine_power" name="engine_power" placeholder="e.g. 5" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="engine_torque">Engine Torque:</label>
+            <input type="text" id="engine_torque" name="engine_torque" placeholder="e.g. 50" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="length">Length:</label>
+            <input type="text" id="length" name="length" placeholder="e.g. 54" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="wheelbase">Wheelbase:</label>
+            <input type="text" id="wheelbase" name="wheelbase" placeholder="e.g. 14" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="width">Width:</label>
+            <input type="text" id="width" name="width" placeholder="e.g. 20" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="fuel_tank_capacity">Fuel Tank Capacity:</label>
+            <input type="text" id="fuel_tank_capacity" name="fuel_tank_capacity" placeholder="e.g. 10" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="boot_space_seats_up">Boot Space Seats Up:</label>
+            <input type="text" id="boot_space_seats_up" name="boot_space_seats_up" placeholder="e.g. 10" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="urban">Urban:</label>
+            <input type="text" id="urban" name="urban" placeholder="e.g. 10" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="extra_urban">Extra Urban:</label>
+            <input type="text" id="extra_urban" name="extra_urban" placeholder="e.g. 10" />
+            <small></small>
+        </div>
+        <div class="field">
+            <label for="co2_emissions">CO2 Emissions:</label>
+            <input type="text" id="co2_emissions" name="co2_emissions" placeholder="e.g. 10" />
+            <small></small>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    {% endblock %}
