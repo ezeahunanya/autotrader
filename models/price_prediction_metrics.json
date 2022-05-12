@@ -1,0 +1,38 @@
+{
+    "best_params": {
+        "colsample_bytree": 0.9, 
+        "learning_rate": 0.16, 
+        "max_depth": 8, 
+        "min_child_weight": 7, 
+        "n_estimators": 88, 
+        "subsample": 0.7854800524576191, 
+        "verbosity": 0
+    }, 
+    "best_trial": {
+        "loss": 0.21442155539989471, 
+        "status": "ok", 
+        "mae": {"mean_val": 0.14868198335170746, "stdev": 0.0051156203262507915}, 
+        "mae_percentage_of_iqr": 11.410839040282058, 
+        "mse": {"mean_val": 0.04611071199178696, "stdev": 0.004972475580871105}, 
+        "mse_percentage_of_iqr": 3.5388410936545545, 
+        "rmse": {"mean_val": 0.21442155539989471, "stdev": 0.011580392718315125}, 
+        "rmse_percentage_of_iqr": 16.456128713640965
+    }, 
+    "feature_importances": {
+        "manufactured_year": 0.48863133788108826, 
+        "engine_power": 0.254327654838562, 
+        "mileage": 0.07269861549139023, 
+        "engine_torque": 0.035030215978622437, 
+        "engine_size": 0.031102601438760757, 
+        "extra_urban": 0.01939086616039276, 
+        "height": 0.01785160042345524, 
+        "top_speed": 0.01490720734000206, 
+        "wheelbase": 0.014756747521460056, 
+        "co2_emissions": 0.01316202525049448, 
+        "width": 0.009273395873606205, 
+        "length": 0.008915957063436508, 
+        "boot_space_seats_up": 0.007638228591531515, 
+        "fuel_tank_capacity": 0.007257384713739157, 
+        "urban": 0.005056138150393963
+    }
+}

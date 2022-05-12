@@ -1,17 +1,16 @@
 import sys
 import os
-
 module_path = os.path.abspath(os.path.join('..'))
-if module_path not in sys.path:
-    sys.path.append(module_path)
+sys.path = [module_path] + sys.path
 
 import mysql.connector
 from data_preparation.autotrader_scraper.autotrader_scraper.config import mysql_details
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import numpy as np
+from collections import defaultdict
 
-def get_data_from_database():
+def get_data_from_database() -> pd.DataFrame:
     '''
     Return full dataset with vehicle features and seller information joined
     in one table.
@@ -35,7 +34,7 @@ def get_data_from_database():
     return pd.DataFrame(full_results)
 
 
-def drop_columns(df):
+def drop_columns(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Drops columns from dataframe.
     '''
@@ -52,7 +51,7 @@ def drop_columns(df):
     return df.drop(columns_to_drop, axis=1)
 
 
-def combine_latitudes_and_longitudes(df):
+def combine_latitudes_and_longitudes(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Combine latitudes and longitudes into one column.
     '''
@@ -71,7 +70,7 @@ def combine_latitudes_and_longitudes(df):
 
     return df
 
-def combine_CO2_columns(df):
+def combine_CO2_columns(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Combine CO2 columns into one.
     '''
@@ -87,18 +86,13 @@ def combine_CO2_columns(df):
 
     return df
 
-def ulez_boolean(x):
+def ulez_boolean(x: str) -> int:
     '''
     Returns a 1 if 'ULEZ' string is given or a 0 if not.
     '''
-    
-    if x == 'ULEZ':
-        x = 1
-    else:
-        x = 0
-    return x
+    return 1 if x == 'ULEZ' else 0
 
-def convert_emission_scheme_to_boolean(df):
+def convert_emission_scheme_to_boolean(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Convert emission scheme column to boolean column.
     '''
@@ -109,7 +103,7 @@ def convert_emission_scheme_to_boolean(df):
 
     return df
 
-def clean_round1(df):
+def clean_round1(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Fixes dtypes for floats and ints. Also makes strings lowercase and replaces
     space with '_'.
@@ -130,30 +124,24 @@ def clean_round1(df):
                         'combined': 'float', 'seller_rating': 'float'
                         })
 
-    df['make'] = df.make.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
-    df['model'] = df.model.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore').astype('category')
-    df['trim'] = df.trim.map(lambda x: x.strip().lower().replace(' ', '-'), na_action='ignore')
-    df['body_type'] = df.body_type.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
-    df['transmission'] = df.transmission.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
-    df['fuel_type'] = df.fuel_type.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
-    df['insurance_group'] = df.insurance_group.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
-    df['seller_segment'] = df.seller_segment.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
-    df['region'] = df.region.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
-    df['county'] = df.county.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
-    df['town'] = df.town.map(lambda x: x.strip().lower().replace(' ', '_'), na_action='ignore').astype('category')
+    cols = ['make','model','trim','body_type','transmission','fuel_type','insurance_group','seller_segment','region','county','town']
+    sep = defaultdict(lambda:'_', {'make':'-', 'model':'-', 'trim':'-'})
+    mapper_params = lambda sep: {'arg': lambda x: x.strip().lower().replace(' ', sep), 'na_action': 'ignore'}
+    for col in cols:
+        df[col] = df[col].map(**mapper_params(sep[col]))
+        if col!='trim':
+            df[col] = df[col].astype('category')
 
     return df
 
-def combine_make_model_trim(df):
+def combine_make_model_trim(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Combines make, model and trim columns.
     '''
     
     df = df.copy()
     df['make_model_trim'] = df.make + '_' + df.model + '_' + df.trim.fillna('')
-    df['make_model_trim'] = df['make_model_trim'].apply(lambda x: x.strip('_'))
-    df['make_model_trim'] = df['make_model_trim'].astype('category')
-    df.drop(['make', 'model', 'trim'], axis=1, inplace=True)
+    df['make_model_trim'] = df['make_model_trim'].apply(lambda x: x.strip('_')).astype('category')
 
     df = df[['make_model_trim', 'manufactured_year', 'body_type', 'mileage', 'engine_size',
        'transmission', 'fuel_type', 'doors', 'seats', 'number_of_owners',
@@ -167,7 +155,7 @@ def combine_make_model_trim(df):
 
     return df
 
-def get_percentage_nulls(df):
+def get_percentage_nulls(df: pd.DataFrame) -> pd.Series:
     '''
     Returns percentage of nulls in each coumn in decreasing order.
     '''
@@ -175,7 +163,7 @@ def get_percentage_nulls(df):
     return (df.isnull().sum()*100/len(df)).sort_values(ascending=False)
 
 
-def drop_rows_with_small_percentage_of_missing_values(df):
+def drop_rows_with_small_percentage_of_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Returns dataframe after rows in columns with less than 0.1% of missing values are dropped.
     '''
@@ -189,7 +177,7 @@ def drop_rows_with_small_percentage_of_missing_values(df):
     return df.dropna(subset=columns)
 
 
-def fill_columns_with_missing_values(df):
+def fill_columns_with_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     '''
     Returns dataframe after inputing missing values using groupby on car make.
     '''
@@ -215,9 +203,9 @@ def fill_columns_with_missing_values(df):
             df[column] = df.groupby(['make', 'model', 'trim', 'manufactured_year'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
             df[column] = df.groupby(['make', 'model', 'trim'])[column].transform(lambda x: x.fillna(x.mode()[0] if not x.mode().empty else np.nan))
     
-    return df    
+    return df
 
-def predict_no_of_owners(df):
+def predict_no_of_owners(df: pd.DataFrame) -> np.ndarray:
     '''
     Predicts missing values for number of owners using numerical columns with no missing values.
     '''

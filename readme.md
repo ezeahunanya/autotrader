@@ -18,7 +18,7 @@ Clone the GitHub repository by running the following in the command line:
 git clone https://github.com/ezeahunanya/autotrader.git
 ```
 
-Create a new environment and pip install the packages in the >>>>requirements.txt file.
+Install the packages in the `requirements.txt` file.
 
 To run the scraper, change the working directory to 'autotrader_scraper' 
 from the command line. Then run the following command:
@@ -27,3 +27,15 @@ from the command line. Then run the following command:
 scrapy crawl autotrader
 ```
 
+## Prediction Model
+
+To create the training data for the price prediction model run: 
+```
+python scripts/preprocess_price_prediction_model.py
+```
+
+This will output training data to `data/training_data.csv`. To train the model using this training data run: 
+```
+python scripts/train_price_prediction_model.py
+``` 
+This will output the trained model and the model metrics (optimized hyperparameters, evaluation metrics and feature importances) and save to `models/`.
