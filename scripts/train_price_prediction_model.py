@@ -1,7 +1,9 @@
 import os
+import sys
 PROJ_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-import pickle
-import json
+sys.path = [PROJ_DIR] + sys.path
+
+from utils import save_as_pickle, save_as_json
 from pprint import pprint
 from typing import Dict, Tuple, Callable, Union, Any
 
@@ -15,14 +17,6 @@ features = [ # picked these numerical features randomly just to get going.
     'manufactured_year', 'mileage', 'engine_size', 'top_speed', 'engine_power', 'engine_torque', 'height', 'length', 
     'wheelbase', 'width', 'fuel_tank_capacity', 'boot_space_seats_up', 'urban', 'extra_urban', 'co2_emissions'
     ]
-
-def save_as_pickle(obj: XGBRegressor, filepath: str) -> None:
-    with open(filepath, 'wb') as handle:
-        pickle.dump(obj, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-def save_as_json(obj: Dict, filepath: str) -> None:
-    with open(filepath, 'w') as fp:
-        json.dump(obj, fp)
 
 def mae(y_true: np.ndarray, y_preds: np.ndarray) -> float:
     mae = float(np.mean(np.abs(y_true - y_preds)))
@@ -108,7 +102,7 @@ def main(X: pd.DataFrame, y: pd.DataFrame) -> Tuple[XGBRegressor, dict]:
 if __name__ == '__main__':
     training_data = pd.read_csv(PROJ_DIR+'/data/training_data.csv')
     X = training_data[features]
-    y = training_data['price'].apply(lambda x: np.log(1+x)) # Changing target variable to log of price cause price is massively right skewed
+    y = training_data['price'].apply(lambda x: np.log(1+x)) # Changing target variable to log of price cause price is massively right skewed. Should we transform back to price before model predicts?
     model, model_details = main(X, y)
     pprint(model_details, sort_dicts=False)
     print(f"\nThe average root meat squared percentage error (of the interquartile range) for this model is {round(model_details['best_trial']['rmse_percentage_of_iqr'], 2)}%")
