@@ -12,6 +12,7 @@ import numpy as np
 from sklearn.model_selection import KFold
 from hyperopt import fmin, tpe, hp, STATUS_OK, space_eval, Trials
 from xgboost import XGBRegressor
+import shap
 
 
 def mae(y_true: np.ndarray, y_preds: np.ndarray) -> float:
@@ -28,7 +29,7 @@ def metric_result(metric: str, metrics_array: np.ndarray) ->  Dict[str, float]:
 def sort_dict_by_value(dct: Dict[Any, Union[float, int]]) -> Dict[Any, Union[float, int]]:
     return { k: v for k, v in sorted(dct.items(), key = lambda item: item[1], reverse=True) }
 
-def kfold_scorer(X: pd.DataFrame, y: pd.DataFrame, folds: int = 10) -> Callable:
+def kfold_scorer(X: pd.DataFrame, y: pd.Series, folds: int = 10) -> Callable:
     def objective(params: Dict) -> Dict:
         regressor = XGBRegressor(**params)
         kf = KFold(n_splits=folds, shuffle=True, random_state=42)
@@ -55,7 +56,7 @@ def kfold_scorer(X: pd.DataFrame, y: pd.DataFrame, folds: int = 10) -> Callable:
         return results
     return objective
 
-def optimize_hyperparams(X: pd.DataFrame, y: pd.DataFrame) -> Tuple[dict, Trials]:
+def optimize_hyperparams(X: pd.DataFrame, y: pd.Series) -> Tuple[dict, Trials]:
     space = {
         'verbosity': 0,
         'learning_rate': hp.choice('learning_rate', np.arange(0.001, 0.99, 0.001)),
@@ -75,11 +76,13 @@ def optimize_hyperparams(X: pd.DataFrame, y: pd.DataFrame) -> Tuple[dict, Trials
     )
     best_params = space_eval(space, best)
     return best_params, trials
+
     
-def main(X: pd.DataFrame, y: pd.DataFrame) -> Tuple[XGBRegressor, dict]:
+def main(X: pd.DataFrame, y: pd.Series) -> Tuple[XGBRegressor, dict, shap.TreeExplainer]:
     best_params, trials = optimize_hyperparams(X, y)
     model = XGBRegressor(**best_params)
     model.fit(X.values, y.values)
+    shap_explainer = shap.TreeExplainer(model)
 
     int64_to_int = lambda x: int(x) if type(x) == np.int64 else x
     best_params = {k:int64_to_int(v) for k, v in best_params.items()} # np.int64 objects are not JSON serializable
@@ -91,7 +94,7 @@ def main(X: pd.DataFrame, y: pd.DataFrame) -> Tuple[XGBRegressor, dict]:
         'best_trial': trials.best_trial['result'],
         'feature_importances': feature_importances
     }
-    return model, model_details
+    return model, model_details, shap_explainer
 
 
 
@@ -99,8 +102,12 @@ if __name__ == '__main__':
     training_data = pd.read_csv(PROJ_DIR+'/data/training_data.csv')
     X = training_data[MODEL_FEATURES]
     y = training_data['price'].apply(lambda x: np.log(1+x)) # Changing target variable to log of price cause price is massively right skewed. Should we transform back to price before model predicts?
-    model, model_details = main(X, y)
+
+    model, model_details, shap_explainer = main(X, y)
+
     pprint(model_details, sort_dicts=False)
     print(f"\nThe average root meat squared percentage error (of the interquartile range) for this model is {round(model_details['best_trial']['rmse_percentage_of_iqr'], 2)}%")
+    
     save_as_pickle(obj=model, filepath=PROJ_DIR+'/models/price_prediction_model.pkl')
+    save_as_pickle(obj=shap_explainer, filepath=PROJ_DIR+'/models/price_prediction_shap_explainer.pkl')
     save_as_json(obj=model_details, filepath=PROJ_DIR+'/models/price_prediction_metrics.json')
