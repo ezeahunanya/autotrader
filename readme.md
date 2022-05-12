@@ -44,5 +44,6 @@ This will output the trained model and the model metrics (optimized hyperparamet
 ## Flask App
 
 What's this for? We'll have a server and client: 
+
     1. There will be a page on the client which will take post requests of feature inputs to the price prediction model we'll use this to predict the price for a car with these features.
     2. We'll return the price prediction plus the shapley values to show which feature was most important for this prediction. We'll store these predictions plus shapley values in a database.
