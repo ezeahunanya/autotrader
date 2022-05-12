@@ -45,5 +45,7 @@ This will output the trained model and the model metrics (optimized hyperparamet
 
 What's this for? We'll have a server and client: 
 
-    1. There will be a page on the client which will take post requests of feature inputs to the price prediction model we'll use this to predict the price for a car with these features.
-    2. We'll return the price prediction plus the shapley values to show which feature was most important for this prediction. We'll store these predictions plus shapley values in a database.
+    - There will be a page on the client which will take post requests of feature inputs to the price prediction model we'll use this to predict the price for a car with these features.
+    - We'll return the price prediction plus the shapley values to show which feature was most important for this prediction. We'll store these predictions plus shapley values in a database.
+
+To start flask app in development mode, run `python autotrader/main.py`. This should start the server from port 5000. Got to `localhost:5000/predict` in your browser and input feature values, after hitting sumbit you should get a price prediction back.
