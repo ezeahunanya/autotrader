@@ -22,3 +22,5 @@ data_preparation/car_data.pkl
 data_preparation/eda/.ipynb_checkpoints/Untitled-checkpoint.ipynb
 data_preparation/eda/car_data.pkl
 Model/car_dataset.pkl
+.vscode
+scratch_pad.ipynb
