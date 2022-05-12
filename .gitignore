@@ -17,4 +17,3 @@ data_preparation/eda/car_data.pkl
 Model/car_dataset.pkl
 .vscode
 scratch_pad.ipynb
-scraping/
