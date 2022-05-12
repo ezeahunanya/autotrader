@@ -15,7 +15,7 @@ def load_pickle(filepath: str) -> Any:
         obj = pickle.load(handle)
     return obj
 
-MODEL_FEATURES = [  # picked these numerical features randomly just to get going. 
+MODEL_FEATURES = [  # picked these numerical features randomly just to get going 
     'manufactured_year', 
     'mileage', 
     'engine_size', 
