@@ -6,9 +6,9 @@ from utils import  load_pickle, MODEL_FEATURES
 import pandas as pd
 import numpy as np
 from typing import Dict
-
 from flask import request
 
+# This function seems messy and also not optimally named
 def predict_controller(request: request) -> Dict:
 
     feature_values = {feature: request.form.get(feature, type=float) for feature in MODEL_FEATURES}
