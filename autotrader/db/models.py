@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, func
-# from sqlalchemy.sql import func 
 from .database import engine, Base
 from sqlalchemy.dialects.postgresql import JSONB
 

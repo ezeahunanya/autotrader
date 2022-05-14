@@ -44,4 +44,4 @@ scrapy crawl autotrader
 There are 2 stages in the price prediction model pipeline:
 
 1. `scripts/preprocess_price_prediction_model.py` cleans the scraped data and and outputs model ready training data to `data/training_data.csv`.
-2. `scripts/train_price_prediction_model.py` trains the model useing training data from :point_up: and creates `models/price_prediction_model.pkl` and `models/price_prediction_metrics.json`.
+2. `scripts/train_price_prediction_model.py` trains the model using training data from :point_up: and creates `models/price_prediction_model.pkl` and `models/price_prediction_metrics.json`.
