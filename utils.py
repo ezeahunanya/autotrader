@@ -1,6 +1,6 @@
 import pickle
 import json
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 def save_as_pickle(obj: Any, filepath: str) -> None:
     with open(filepath, 'wb') as handle:
@@ -14,6 +14,9 @@ def load_pickle(filepath: str) -> Any:
     with open(filepath, 'rb') as handle:
         obj = pickle.load(handle)
     return obj
+
+def sort_dict_by_value(dct: Dict[Any, Union[float, int]], reverse=True) -> Dict[Any, Union[float, int]]:
+    return { k: v for k, v in sorted(dct.items(), key= lambda item: item[1], reverse=reverse) }
 
 MODEL_FEATURES = [  # picked these numerical features randomly just to get going 
     'manufactured_year', 

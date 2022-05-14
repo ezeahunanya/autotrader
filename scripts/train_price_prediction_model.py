@@ -3,7 +3,7 @@ import sys
 PROJ_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path = [PROJ_DIR] + sys.path
 
-from utils import save_as_pickle, save_as_json, MODEL_FEATURES
+from utils import sort_dict_by_value, save_as_pickle, save_as_json, MODEL_FEATURES
 from pprint import pprint
 from typing import Dict, Tuple, Callable, Union, Any
 
@@ -25,9 +25,6 @@ def mse(y_true: np.ndarray, y_preds: np.ndarray) -> float:
 
 def metric_result(metric: str, metrics_array: np.ndarray) ->  Dict[str, float]:
     return {'mean_val': float(metrics_array[metric].mean()), 'stdev': float(metrics_array[metric].std())}
-
-def sort_dict_by_value(dct: Dict[Any, Union[float, int]]) -> Dict[Any, Union[float, int]]:
-    return { k: v for k, v in sorted(dct.items(), key = lambda item: item[1], reverse=True) }
 
 def kfold_scorer(X: pd.DataFrame, y: pd.Series, folds: int = 10) -> Callable:
     def objective(params: Dict) -> Dict:
