@@ -15,6 +15,14 @@ from db.models import Prediction
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False # This ensures that the jsons returned to the client preserve their order that exists when we send off our python dictionary. The default is for flask to order it by key.
 
+@app.route("/", methods=['GET'])
+def home():
+    return render_template('home.html')
+
+@app.route("/hello", methods=['GET'])
+def hello():
+    return render_template('hello.html')
+
 @app.route("/predict", methods=['GET', 'POST'])
 def predict(write_to_db: bool = True):
     if request.method == 'GET':
