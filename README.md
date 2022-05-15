@@ -20,8 +20,7 @@ can be done whilst inside the psql console with:
         CREATE USER autotrader;
         CREATE DATABASE autotrader_development;
 
-3. Run `python -m autotrader.database` in the root directory of the project to connect to the db and create the tables (at the moment only only one table)
-4. Run `python autotrader/main.py` to start the flask server and go to `localhost:5000/predict` in your brower to use the app.
+3. Run `python autotrader/main.py` to start the flask server and go to `localhost:5000/predict` in your brower to use the app.
 
 
 
