@@ -22,7 +22,7 @@ can be done whilst inside the psql console with:
         CREATE USER autotrader;
         CREATE DATABASE autotrader_development;
 
-1. Run `python autotrader/main.py` to start the flask server and go to `localhost:5000` in your brower to get a prediction.
+1. Run `python autotrader/app.py` to start the flask server and go to `localhost:5000` in your brower to get a prediction.
 
 ### Running from Docker
 
