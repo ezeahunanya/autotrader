@@ -15,14 +15,14 @@ Things you will need installed:
 
 Setup:
 
-1. Install python dependencies using `pip install -r requirements.txt`.
+1. Install python dependencies using `pip install -r autotrader/requirements.txt`.
 2. Create the `autotrader` user and `autotrader_development` database on your local postgres instance. This 
 can be done whilst inside the psql console with:
 
         CREATE USER autotrader;
         CREATE DATABASE autotrader_development;
 
-3. Run `python autotrader/main.py` to start the flask server and go to `localhost:5000/predict` in your brower to use the app.
+1. Run `python autotrader/main.py` to start the flask server and go to `localhost:5000` in your brower to get a prediction.
 
 ### Running from Docker
 
