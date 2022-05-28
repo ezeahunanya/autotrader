@@ -1,11 +1,11 @@
 import os
 import sys
-from flask import Flask
+from flask import Flask, request, render_template
+from flask_cors import CORS
 PROJ_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path = [PROJ_DIR] + sys.path
 
 
-from flask import Flask, request, render_template
 from models.prediction_request import PredictionRequest
 from sqlalchemy.orm import Session
 from db.database import engine
@@ -14,6 +14,7 @@ from db.schema import Prediction
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False # This ensures that the jsons returned to the client preserve their order that exists when we send off our python dictionary. The default is for flask to order it by key.
+CORS(app)
 
 @app.route("/", methods=['GET', 'POST'])
 def predict(write_to_db: bool = True):
