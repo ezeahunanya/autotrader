@@ -17,6 +17,7 @@ class PredictionRequest:
 
     def __init__(self, request: request):
         self.request = request
+        self.data = request.get_json()
         self.ip_address = request.remote_addr
 
     @cached_property # this decorator means that when a new PredictionRequest object is instantiated this method is calculated and stored in an attribute of the same name. The 'cached' bit means this attribute is calculated once and stored in the cache (i.e. memory). So when this attribute is called again, it isn't re-calculated but just called from memory.
@@ -26,7 +27,7 @@ class PredictionRequest:
 
     @cached_property
     def feature_values_for_db(self) -> Dict[str, float]:
-        feature_values_for_db = {feature: self.request.form.get(feature, type=float) for feature in self.MODEL_FEATURES}
+        feature_values_for_db = {feature: float(self.data[feature]) for feature in self.MODEL_FEATURES}
         return feature_values_for_db
 
     @cached_property
