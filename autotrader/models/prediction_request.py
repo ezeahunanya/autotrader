@@ -48,3 +48,6 @@ class PredictionRequest:
     def response(self) -> Dict[str, Union[float, dict]]:
         return { 'price_prediction': self.prediction, 'shap_values': self.shap_values} 
 
+    def __repr__(self) -> str:
+        return f'PredictionRequest(ip_address={self.ip_address})'
+
