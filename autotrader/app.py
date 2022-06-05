@@ -1,19 +1,32 @@
 import os
 import sys
-from flask import Flask, request, render_template
-from flask_cors import CORS
+import logging 
+
 PROJ_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path = [PROJ_DIR] + sys.path
 
-
+from flask import Flask, request, render_template
+from flask_cors import CORS
 from models.prediction_request import PredictionRequest
 from sqlalchemy.orm import Session
 from db.database import engine
 from db.schema import Prediction
 
+# Setting up root logger
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.WARNING)
+
+file_handler = logging.FileHandler(PROJ_DIR+'/autotrader/logs/app.log')
+file_handler.setLevel(logging.INFO)
+
+logging.basicConfig(
+    format='%(asctime)s %(levelname)s %(module)s %(name)s %(message)s',
+    handlers=[file_handler, stream_handler]
+    )
+
 
 app = Flask(__name__)
-app.config['JSON_SORT_KEYS'] = False # This ensures that the jsons returned to the client preserve their order that exists when we send off our python dictionary. The default is for flask to order it by key.
+app.config['JSON_SORT_KEYS'] = False
 CORS(app)
 
 @app.route("/", methods=['GET', 'POST'])
@@ -27,8 +40,7 @@ def predict(write_to_db: bool = True):
         return prediction_request.response
 
 def store_prediction(prediction_request: PredictionRequest) -> None:
-
-    with Session(engine) as session: # should probably put this in a try/except block
+    with Session(engine) as session:
         prediction_record = Prediction(
             price_prediction = prediction_request.prediction,
             feature_values = prediction_request.feature_values_for_db,
@@ -37,7 +49,7 @@ def store_prediction(prediction_request: PredictionRequest) -> None:
             )
         session.add(prediction_record)
         session.commit()
-
+        
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

@@ -1,13 +1,27 @@
 import os
 import sys
+import logging
+from functools import cached_property
+from typing import Dict, Union
+
 PROJ_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path = [PROJ_DIR] + sys.path
-from functools import cached_property
+
+
 from utils import  sort_dict_by_value, load_pickle, MODEL_FEATURES
 import pandas as pd
 import numpy as np
-from typing import Dict, Union
 from flask import request
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s')
+
+file_handler = logging.FileHandler(PROJ_DIR+'/autotrader/logs/prediction_request.log')
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
 
 
 class PredictionRequest:
@@ -19,6 +33,8 @@ class PredictionRequest:
         self.request = request
         self.data = request.get_json()
         self.ip_address = request.remote_addr
+
+        logger.info(f'Created: {self.__repr__()}')
 
     @cached_property # this decorator means that when a new PredictionRequest object is instantiated this method is calculated and stored in an attribute of the same name. The 'cached' bit means this attribute is calculated once and stored in the cache (i.e. memory). So when this attribute is called again, it isn't re-calculated but just called from memory.
     def feature_values(self) -> np.ndarray:
@@ -50,4 +66,3 @@ class PredictionRequest:
 
     def __repr__(self) -> str:
         return f'PredictionRequest(ip_address={self.ip_address})'
-
