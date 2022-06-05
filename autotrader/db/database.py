@@ -16,11 +16,7 @@ formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s')
 file_handler = logging.FileHandler(PROJ_DIR+'/autotrader/logs/database.log')
 file_handler.setFormatter(formatter)
 
-stream_handler = logging.StreamHandler()
-stream_handler.setFormatter(formatter)
-
 logger.addHandler(file_handler)
-# logger.addHandler(stream_handler) # Disabling logging sqlalchemy logs to the console for now.
 
 
 DB_SETTINGS = {
